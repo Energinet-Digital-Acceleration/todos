@@ -1,8 +1,14 @@
 # Activity Log
 
 ## Run Summary
+- 2026-01-19 13:27:38 | run=20260119-132543-96758 | iter=1 | mode=build | story=US-001 | duration=115s | status=success
 
 ## Events
 
 [2026-01-19 13:13:20] ITERATION 1 start (mode=build story=US-001)
 [2026-01-19 13:25:43] ITERATION 1 start (mode=build story=US-001)
+[2026-01-19 13:27:38] ITERATION 1 end (duration=115s)
+[2026-01-19 13:27:40] ITERATION 2 start (mode=build story=US-002)
+Activity log:
+[2026-01-19 13:27:57] US-002: Starting work on base layout with dark mode toggle
+[2026-01-19 13:31:35] US-002: Implemented base layout with dark mode toggle - all tests pass
