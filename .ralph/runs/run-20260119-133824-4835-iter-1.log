@@ -1,0 +1,13 @@
+US-003 is complete. All acceptance criteria met:
+
+- ✅ Created todos store using Svelte writable store
+- ✅ Store shape: array of {id, title, completed, createdAt}
+- ✅ Generate unique IDs with crypto.randomUUID()
+- ✅ Subscribe to store changes and save to LocalStorage
+- ✅ Load from LocalStorage on app init
+- ✅ Export functions: addTodo, toggleTodo, deleteTodo, clearCompleted
+- ✅ Negative case: corrupt LocalStorage JSON -> reset to empty array
+
+Quality gates all pass (build, lint, check). Working tree is clean.
+
+<promise>COMPLETE</promise>

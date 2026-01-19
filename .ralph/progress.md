@@ -166,3 +166,39 @@ Run summary: /Users/mellson/src/energinet/todos/.ralph/runs/run-20260119-133824-
   - ESLint catches unused destructured variables - don't destructure set if not using it
   - Store-only US (no UI) doesn't require browser testing
 ---
+
+## 2026-01-19 13:50 - US-004: Todo input component
+Thread:
+Run: 20260119-133824-4835 (iteration 2)
+Run log: /Users/mellson/src/energinet/todos/.ralph/runs/run-20260119-133824-4835-iter-2.log
+Run summary: /Users/mellson/src/energinet/todos/.ralph/runs/run-20260119-133824-4835-iter-2.md
+- Guardrails reviewed: yes
+- No-commit run: false
+- Commit: 63f55f5 feat(US-004): add TodoInput component with keyboard handling
+- Post-commit status: clean (feature files committed)
+- Verification:
+  - Command: bun run build -> PASS
+  - Command: bun run lint -> PASS
+  - Command: bun run check -> PASS (0 errors, 0 warnings)
+  - Browser test: input visible with placeholder "Add a todo..." -> PASS
+  - Browser test: Enter key submits and clears input -> PASS
+  - Browser test: Escape key clears input without submitting -> PASS
+  - Browser test: Empty/whitespace submissions ignored -> PASS
+  - Browser test: Focus ring styling visible -> PASS
+  - Browser test: Dark mode input styling -> PASS
+- Files changed:
+  - src/lib/TodoInput.svelte (new)
+  - src/App.svelte (import + use TodoInput)
+- What was implemented:
+  - TodoInput.svelte component with Svelte 5 $state() for input value
+  - handleKeydown for Enter (submit + clear) and Escape (clear only)
+  - Integration with addTodo from todos store
+  - Clean minimal styling: transparent bg, subtle border-t separator
+  - Placeholder "Add a todo..." with proper dark mode colors
+  - Focus ring with ring-2 ring-blue-500/30 (subtle opacity)
+  - Positioned at bottom of todo list area (mt-8 pt-4)
+- **Learnings for future iterations:**
+  - Svelte 5 uses onkeydown={handler} instead of on:keydown
+  - bind:value still works in Svelte 5 with $state()
+  - Browser testing essential for verifying keyboard interactions
+---
