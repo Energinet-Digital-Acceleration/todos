@@ -71,3 +71,37 @@ Run summary: /Users/mellson/src/energinet/todos/.ralph/runs/run-20260119-132543-
 - **Learnings:**
   - Story was already completed in previous run, this was a verification pass
 ---
+
+## 2026-01-19 13:35 - US-002: Base layout with dark mode toggle
+Thread:
+Run: 20260119-132543-96758 (iteration 2)
+Run log: /Users/mellson/src/energinet/todos/.ralph/runs/run-20260119-132543-96758-iter-2.log
+Run summary: /Users/mellson/src/energinet/todos/.ralph/runs/run-20260119-132543-96758-iter-2.md
+- Guardrails reviewed: yes
+- No-commit run: false
+- Commit: 2aee66c feat(US-002): add base layout with dark mode toggle
+- Post-commit status: clean
+- Verification:
+  - Command: bun run build -> PASS
+  - Command: bun run lint -> PASS
+  - Command: bun run check -> PASS (0 errors, 0 warnings)
+  - Browser test: dark mode toggle -> PASS
+  - Browser test: theme persists after reload -> PASS
+  - Browser test: cleared LocalStorage defaults to light -> PASS
+- Files changed:
+  - src/App.svelte
+  - src/app.css
+  - .gitignore
+- What was implemented:
+  - Centered container (max-width 600px) with generous padding
+  - Dark mode toggle button in top-right corner with sun/moon icons
+  - Toggle adds/removes 'dark' class on html element
+  - LocalStorage persistence for theme preference
+  - Tailwind v4 dark: variant with @custom-variant config
+  - Smooth color transition (300ms) on theme switch
+  - Focus states and accessibility (aria-label)
+- **Learnings for future iterations:**
+  - Tailwind v4 requires @custom-variant dark (&:where(.dark, .dark *)) in CSS for class-based dark mode
+  - Svelte 5 $effect() runs after mount, perfect for DOM manipulation like adding classes
+  - Browser testing catches issues like dark mode not applying visually despite state being correct
+---
