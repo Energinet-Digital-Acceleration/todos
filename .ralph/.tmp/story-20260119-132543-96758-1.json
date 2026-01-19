@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "total": 8,
+  "remaining": 8,
+  "quality_gates": [
+    "bun run build",
+    "bun run lint",
+    "bun run check"
+  ],
+  "id": "US-001",
+  "title": "Project scaffold with Vite + Svelte + Tailwind"
+}
