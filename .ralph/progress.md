@@ -137,3 +137,32 @@ Run summary: /Users/mellson/src/energinet/todos/.ralph/runs/run-20260119-133404-
   - Implementation was already complete from previous run
   - Browser automation testing validates visual and interaction behavior
 ---
+
+## 2026-01-19 13:42 - US-003: Todo data store with LocalStorage
+Thread:
+Run: 20260119-133824-4835 (iteration 1)
+Run log: /Users/mellson/src/energinet/todos/.ralph/runs/run-20260119-133824-4835-iter-1.log
+Run summary: /Users/mellson/src/energinet/todos/.ralph/runs/run-20260119-133824-4835-iter-1.md
+- Guardrails reviewed: yes
+- No-commit run: false
+- Commit: b9c39ba feat(US-003): add todos store with LocalStorage persistence
+- Post-commit status: clean
+- Verification:
+  - Command: bun run build -> PASS
+  - Command: bun run lint -> PASS (after fixing unused var)
+  - Command: bun run check -> PASS (0 errors, 0 warnings)
+- Files changed:
+  - src/stores/todos.ts (new)
+- What was implemented:
+  - Svelte writable store with Todo interface {id, title, completed, createdAt}
+  - crypto.randomUUID() for unique IDs
+  - loadTodos() from localStorage with corrupt JSON handling (reset to empty)
+  - saveTodos() on store subscription (auto-persist)
+  - Exported functions: addTodo, toggleTodo, deleteTodo, clearCompleted
+  - New todos added to beginning of array
+  - Empty/whitespace titles ignored in addTodo
+- **Learnings for future iterations:**
+  - Svelte 5 still supports svelte/store writable stores
+  - ESLint catches unused destructured variables - don't destructure set if not using it
+  - Store-only US (no UI) doesn't require browser testing
+---
