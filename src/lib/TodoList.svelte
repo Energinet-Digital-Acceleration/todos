@@ -135,7 +135,8 @@
               ? 'text-stone-400 dark:text-neutral-500 line-through opacity-60'
               : 'text-stone-700 dark:text-neutral-200'}"
             ondblclick={() => startEdit(todo.id, todo.title)}
-            onkeydown={(e) => e.key === 'Enter' && startEdit(todo.id, todo.title)}
+            onkeydown={(e) =>
+              e.key === 'Enter' && startEdit(todo.id, todo.title)}
           >
             {todo.title}
           </span>

@@ -54,7 +54,7 @@
            border border-stone-200/60 dark:border-neutral-600
            focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2
            dark:focus-visible:ring-offset-neutral-800"
-    aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+    aria-label={isDark ? 'Skift til lyst tema' : 'Skift til mørkt tema'}
   >
     {#if isDark}
       <!-- Sun icon -->
