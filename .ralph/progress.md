@@ -344,3 +344,43 @@ Run summary: /Users/mellson/src/energinet/todos/.ralph/runs/run-20260119-135517-
   - Conditional rendering with Svelte transitions needs wrapper div
   - Browser automation confirms all visual states across multiple interactions
 ---
+
+## 2026-01-19 14:20 - US-008: Polish and final styling pass
+Thread:
+Run: 20260119-135517-9706 (iteration 3)
+Run log: /Users/mellson/src/energinet/todos/.ralph/runs/run-20260119-135517-9706-iter-3.log
+Run summary: /Users/mellson/src/energinet/todos/.ralph/runs/run-20260119-135517-9706-iter-3.md
+- Guardrails reviewed: yes
+- No-commit run: false
+- Commit: 72bc344 feat(US-008): polish and final styling pass
+- Post-commit status: clean
+- Verification:
+  - Command: bun run build -> PASS
+  - Command: bun run lint -> PASS
+  - Command: bun run check -> PASS (0 errors, 0 warnings)
+  - Browser test: light mode card with shadow -> PASS
+  - Browser test: dark mode comfortable colors -> PASS
+  - Browser test: theme toggle smooth transition -> PASS
+  - Browser test: focus-visible states on tab navigation -> PASS
+  - Browser test: completion animation smooth -> PASS
+  - Browser test: completed section styling -> PASS
+- Files changed:
+  - src/App.svelte
+  - src/app.css
+  - src/lib/TodoInput.svelte
+  - src/lib/TodoList.svelte
+- What was implemented:
+  - Card container with subtle shadow and rounded-2xl corners
+  - Stone/neutral color palette for softer, Things 3-like appearance
+  - 300ms transitions on theme toggle for all color properties
+  - focus-visible ring states for keyboard navigation (not on click)
+  - Clean sans-serif typography with font smoothing
+  - Increased spacing/padding throughout for better aesthetics
+  - Removed transition-colors classes in favor of CSS-based theme transitions
+  - Improved focus states on all interactive elements (buttons, input)
+- **Learnings for future iterations:**
+  - Use stone/neutral Tailwind colors for warmer, less harsh feel
+  - focus-visible:ring instead of focus:ring for keyboard-only focus states
+  - CSS * selector with transition-duration handles theme toggle smoothly
+  - Browser testing validates visual polish across light/dark modes
+---
