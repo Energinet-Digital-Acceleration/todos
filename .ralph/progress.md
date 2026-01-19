@@ -202,3 +202,40 @@ Run summary: /Users/mellson/src/energinet/todos/.ralph/runs/run-20260119-133824-
   - bind:value still works in Svelte 5 with $state()
   - Browser testing essential for verifying keyboard interactions
 ---
+
+## 2026-01-19 13:55 - US-005: Active todo list display
+Thread:
+Run: 20260119-133824-4835 (iteration 3)
+Run log: /Users/mellson/src/energinet/todos/.ralph/runs/run-20260119-133824-4835-iter-3.log
+Run summary: /Users/mellson/src/energinet/todos/.ralph/runs/run-20260119-133824-4835-iter-3.md
+- Guardrails reviewed: yes
+- No-commit run: false
+- Commit: 9493a39 feat(US-005): add TodoList component with active todos display
+- Post-commit status: clean (feature files committed)
+- Verification:
+  - Command: bun run build -> PASS
+  - Command: bun run lint -> PASS
+  - Command: bun run check -> PASS (0 errors, 0 warnings)
+  - Browser test: active todos displayed in order (newest at top) -> PASS
+  - Browser test: circular checkbox Things 3 style -> PASS
+  - Browser test: hover state shows subtle background change -> PASS
+  - Browser test: generous vertical spacing between items -> PASS
+  - Browser test: completing todo removes from active list -> PASS
+  - Browser test: no active todos -> empty list (no message) -> PASS
+- Files changed:
+  - src/lib/TodoList.svelte (new)
+  - src/App.svelte (import + use TodoList)
+- What was implemented:
+  - TodoList.svelte component with Svelte 5 $derived() for filtering
+  - Filters for active (non-completed) todos only
+  - Circular checkbox button with Things 3 style (rounded-full border-2)
+  - Hover state with bg-gray-100 dark:bg-gray-800
+  - Generous spacing with space-y-2 and py-3 per item
+  - Each todo shows checkbox + title
+  - toggleTodo integration from store
+  - Focus states and accessibility (aria-label)
+- **Learnings for future iterations:**
+  - Svelte 5 $derived() works for computed values like filtered lists
+  - Using button for checkbox allows keyboard accessibility
+  - Browser testing validates visual hover states and filtering behavior
+---
