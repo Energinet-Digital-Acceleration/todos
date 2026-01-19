@@ -1,0 +1,22 @@
+US-007 complete. Summary:
+
+**Implemented:**
+- Completed section below active todos with conditional visibility
+- Header "COMPLETED" with count badge showing number of items
+- "Clear completed" button that removes all completed todos with fade animation
+- Muted styling for completed items (lighter gray text, strikethrough, gray checkbox)
+- Uncheck functionality to move items back to active
+
+**Verified:**
+- `bun run build` -> PASS
+- `bun run lint` -> PASS  
+- `bun run check` -> PASS
+- Browser testing: all acceptance criteria verified
+
+**Commits:**
+- ab1708a feat(US-007): add completed section with clear button
+- 5043354 docs: add progress entry for US-007
+
+**Post-commit status:** clean
+
+<promise>COMPLETE</promise>

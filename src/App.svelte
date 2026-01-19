@@ -37,20 +37,24 @@
   }
 </script>
 
-<div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-  <div class="max-w-[600px] mx-auto px-6 py-12 relative">
-    <!-- Dark mode toggle -->
-    <button
-      onclick={toggleTheme}
-      class="absolute top-4 right-4 p-2 rounded-full
-             bg-gray-200 dark:bg-gray-700
-             text-gray-600 dark:text-gray-300
-             hover:bg-gray-300 dark:hover:bg-gray-600
-             transition-colors duration-200
-             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-             dark:focus:ring-offset-gray-900"
-      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-    >
+<div class="min-h-screen bg-stone-100 dark:bg-neutral-900">
+  <div class="max-w-[600px] mx-auto px-8 py-16 relative">
+    <!-- Main card container with subtle shadow -->
+    <div class="bg-white dark:bg-neutral-800 rounded-2xl shadow-sm dark:shadow-none
+                border border-stone-200/60 dark:border-neutral-700/50
+                px-8 py-10">
+      <!-- Dark mode toggle -->
+      <button
+        onclick={toggleTheme}
+        class="absolute top-6 right-6 p-2.5 rounded-xl
+               bg-stone-100 dark:bg-neutral-700
+               text-stone-500 dark:text-neutral-400
+               hover:bg-stone-200 dark:hover:bg-neutral-600
+               hover:text-stone-700 dark:hover:text-neutral-200
+               focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2
+               dark:focus-visible:ring-offset-neutral-800"
+        aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      >
       {#if isDark}
         <!-- Sun icon -->
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -61,17 +65,18 @@
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
           <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
         </svg>
-      {/if}
-    </button>
+        {/if}
+      </button>
 
-    <!-- Main content area -->
-    <main>
-      <h1 class="text-3xl font-light text-gray-800 dark:text-gray-100 mb-8 tracking-tight">
-        Todos
-      </h1>
+      <!-- Main content area -->
+      <main>
+        <h1 class="text-2xl font-semibold text-stone-800 dark:text-neutral-100 mb-8 tracking-tight">
+          Todos
+        </h1>
 
-      <TodoList />
-      <TodoInput />
-    </main>
+        <TodoList />
+        <TodoInput />
+      </main>
+    </div>
   </div>
 </div>
