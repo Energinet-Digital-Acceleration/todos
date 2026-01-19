@@ -1,5 +1,6 @@
 <script lang="ts">
   import TodoInput from './lib/TodoInput.svelte'
+  import TodoList from './lib/TodoList.svelte'
 
   const THEME_KEY = 'todo-theme'
 
@@ -68,8 +69,8 @@
       <h1 class="text-3xl font-light text-gray-800 dark:text-gray-100 mb-8 tracking-tight">
         Todos
       </h1>
-      <!-- Todo list will go here in future stories -->
 
+      <TodoList />
       <TodoInput />
     </main>
   </div>
