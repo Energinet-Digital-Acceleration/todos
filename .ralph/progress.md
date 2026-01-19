@@ -105,3 +105,35 @@ Run summary: /Users/mellson/src/energinet/todos/.ralph/runs/run-20260119-132543-
   - Svelte 5 $effect() runs after mount, perfect for DOM manipulation like adding classes
   - Browser testing catches issues like dark mode not applying visually despite state being correct
 ---
+
+## 2026-01-19 13:40 - US-002: Verification Run
+Thread:
+Run: 20260119-133404-3216 (iteration 1)
+Run log: /Users/mellson/src/energinet/todos/.ralph/runs/run-20260119-133404-3216-iter-1.log
+Run summary: /Users/mellson/src/energinet/todos/.ralph/runs/run-20260119-133404-3216-iter-1.md
+- Guardrails reviewed: yes
+- No-commit run: false
+- Commit: none (story already complete in commit 2aee66c)
+- Post-commit status: clean (only log files changed)
+- Verification:
+  - Command: bun run build -> PASS
+  - Command: bun run lint -> PASS
+  - Command: bun run check -> PASS (0 errors, 0 warnings)
+  - Browser test: light mode renders correctly -> PASS
+  - Browser test: dark mode toggle switches theme -> PASS
+  - Browser test: theme persists after page reload -> PASS
+  - Browser test: cleared LocalStorage defaults to light mode -> PASS
+- Files changed: none (verification only)
+- What was verified:
+  - All 10 acceptance criteria satisfied
+  - Centered container (max-width 600px) with generous padding
+  - Dark mode toggle in top-right with sun/moon icons
+  - 'dark' class correctly added/removed on html element
+  - LocalStorage persistence working correctly
+  - Theme loads on app init from saved preference
+  - Tailwind dark: variants applied correctly in both themes
+  - Smooth transitions on theme switch (duration-300)
+- **Learnings:**
+  - Implementation was already complete from previous run
+  - Browser automation testing validates visual and interaction behavior
+---
