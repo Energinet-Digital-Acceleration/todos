@@ -39,6 +39,11 @@ function createTodosStore() {
     deleteTodo: (id: string) => {
       update((todos) => todos.filter((todo) => todo.id !== id))
     },
+    updateTodo: (id: string, title: string) => {
+      update((todos) =>
+        todos.map((todo) => (todo.id === id ? { ...todo, title } : todo))
+      )
+    },
     clearCompleted: () => {
       update((todos) => todos.filter((todo) => !todo.completed))
     },
@@ -47,5 +52,4 @@ function createTodosStore() {
 
 export const todos = createTodosStore()
 
-// Re-export individual functions for convenience
-export const { addTodo, toggleTodo, deleteTodo, clearCompleted } = todos
+export const { addTodo, toggleTodo, deleteTodo, updateTodo, clearCompleted } = todos

@@ -23,7 +23,8 @@
     type="text"
     bind:value
     onkeydown={handleKeydown}
-    placeholder="Add a todo..."
+    placeholder="Tilføj en opgave..."
+    aria-label="Tilføj en opgave"
     class="w-full bg-stone-50 dark:bg-neutral-700/50
            text-stone-700 dark:text-neutral-200
            placeholder-stone-400 dark:placeholder-neutral-500

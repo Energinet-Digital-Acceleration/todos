@@ -3,12 +3,11 @@ import type { Todo } from './todos'
 const STORAGE_KEY = 'todos-storage'
 
 export interface AppStorage {
-  theme: 'dark' | 'light'
+  theme?: 'dark' | 'light'
   todos: Todo[]
 }
 
 const defaultStorage: AppStorage = {
-  theme: 'light',
   todos: [],
 }
 

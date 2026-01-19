@@ -6,7 +6,13 @@
   const APP_TITLE = 'Opgaver'
   document.title = APP_TITLE
 
-  let isDark = $state(loadStorage().theme === 'dark')
+  function getInitialTheme(): boolean {
+    const stored = loadStorage().theme
+    if (stored) return stored === 'dark'
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
+  }
+
+  let isDark = $state(getInitialTheme())
 
   $effect(() => {
     document.documentElement.classList.toggle('dark', isDark)
