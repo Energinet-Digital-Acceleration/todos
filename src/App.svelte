@@ -1,4 +1,6 @@
 <script lang="ts">
+  import TodoInput from './lib/TodoInput.svelte'
+
   const THEME_KEY = 'todo-theme'
 
   // Load saved theme or default to light
@@ -67,6 +69,8 @@
         Todos
       </h1>
       <!-- Todo list will go here in future stories -->
+
+      <TodoInput />
     </main>
   </div>
 </div>
