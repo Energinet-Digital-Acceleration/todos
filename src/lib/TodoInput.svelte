@@ -18,7 +18,7 @@
   }
 </script>
 
-<div class="mt-8 pt-6 border-t border-stone-200 dark:border-neutral-700">
+<div class="mb-6">
   <input
     type="text"
     bind:value

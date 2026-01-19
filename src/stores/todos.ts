@@ -1,4 +1,5 @@
 import { writable } from 'svelte/store'
+import { loadStorage, saveStorage } from './storage'
 
 export interface Todo {
   id: string
@@ -7,36 +8,11 @@ export interface Todo {
   createdAt: number
 }
 
-const STORAGE_KEY = 'todos-minimal'
-
-function loadTodos(): Todo[] {
-  if (typeof window === 'undefined') return []
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    if (!stored) return []
-    const parsed = JSON.parse(stored)
-    if (!Array.isArray(parsed)) return []
-    return parsed
-  } catch {
-    // Corrupt JSON - reset to empty
-    return []
-  }
-}
-
-function saveTodos(todos: Todo[]): void {
-  if (typeof window === 'undefined') return
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
-  } catch {
-    // LocalStorage unavailable or quota exceeded
-  }
-}
-
 function createTodosStore() {
-  const { subscribe, update } = writable<Todo[]>(loadTodos())
+  const { subscribe, update } = writable<Todo[]>(loadStorage().todos)
 
   // Subscribe to changes and persist
-  subscribe(saveTodos)
+  subscribe((todos) => saveStorage({ todos }))
 
   return {
     subscribe,

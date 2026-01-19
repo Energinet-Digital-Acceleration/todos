@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { todos, toggleTodo, clearCompleted } from '../stores/todos'
-  import { fly, fade } from 'svelte/transition'
   import { cubicOut } from 'svelte/easing'
+  import { fade, fly } from 'svelte/transition'
+  import { clearCompleted, todos, toggleTodo } from '../stores/todos'
 
   // Filter for active (non-completed) todos
   const activeTodos = $derived($todos.filter((todo) => !todo.completed))
@@ -94,7 +94,9 @@
     <!-- Section header with count badge and clear button -->
     <div class="flex items-center justify-between mb-4">
       <div class="flex items-center gap-2.5">
-        <h2 class="text-xs font-semibold text-stone-400 dark:text-neutral-500 uppercase tracking-wider">
+        <h2
+          class="text-xs font-semibold text-stone-400 dark:text-neutral-500 uppercase tracking-wider"
+        >
           Completed
         </h2>
         <span
@@ -152,7 +154,9 @@
           </button>
 
           <!-- Muted todo title with strikethrough -->
-          <span class="text-[15px] text-stone-400 dark:text-neutral-500 line-through">
+          <span
+            class="text-[15px] text-stone-400 dark:text-neutral-500 line-through"
+          >
             {todo.title}
           </span>
         </div>
