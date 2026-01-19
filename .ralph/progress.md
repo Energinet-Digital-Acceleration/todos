@@ -307,3 +307,40 @@ Run summary: /Users/mellson/src/energinet/todos/.ralph/runs/run-20260119-135517-
   - Set membership check prevents double-click issues during animations
   - Browser testing validates animation timing and state changes
 ---
+
+## 2026-01-19 14:15 - US-007: Completed section with clear button
+Thread:
+Run: 20260119-135517-9706 (iteration 2)
+Run log: /Users/mellson/src/energinet/todos/.ralph/runs/run-20260119-135517-9706-iter-2.log
+Run summary: /Users/mellson/src/energinet/todos/.ralph/runs/run-20260119-135517-9706-iter-2.md
+- Guardrails reviewed: yes
+- No-commit run: false
+- Commit: ab1708a feat(US-007): add completed section with clear button
+- Post-commit status: clean
+- Verification:
+  - Command: bun run build -> PASS
+  - Command: bun run lint -> PASS
+  - Command: bun run check -> PASS (0 errors, 0 warnings)
+  - Browser test: completed section visible with 8 items -> PASS
+  - Browser test: section header shows "COMPLETED" with count badge -> PASS
+  - Browser test: "Clear completed" button visible and clickable -> PASS
+  - Browser test: clicking clear removes all completed todos -> PASS
+  - Browser test: section hides when no completed todos -> PASS
+  - Browser test: completed items show muted styling (strikethrough) -> PASS
+  - Browser test: can uncheck to move back to active -> PASS
+- Files changed:
+  - src/lib/TodoList.svelte
+- What was implemented:
+  - completedTodos derived filter for completed items
+  - Completed section with conditional rendering (#if completedTodos.length > 0)
+  - Section header with "Completed" text + count badge (rounded-full bg)
+  - "Clear completed" button calling clearCompleted from store
+  - Muted styling: gray text, strikethrough, gray checkbox bg
+  - Fade animations for section (in:fade, out:fade)
+  - Fly animation for individual completed items
+  - Uncheck functionality via handleToggle with todo.completed=true
+- **Learnings for future iterations:**
+  - clearCompleted already existed in store from US-003
+  - Conditional rendering with Svelte transitions needs wrapper div
+  - Browser automation confirms all visual states across multiple interactions
+---

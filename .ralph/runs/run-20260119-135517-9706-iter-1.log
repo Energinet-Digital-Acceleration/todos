@@ -1,0 +1,16 @@
+US-006 is complete. Summary of what was implemented:
+
+**US-006: Complete todo interaction with animation**
+
+- ✅ Click checkbox to toggle completion
+- ✅ Completing: checkbox fills with subtle animation (blue bg + checkmark SVG with fade)
+- ✅ Completing: title gets strikethrough + fades (opacity-60)
+- ✅ Completing: item slides out with fly transition after 300ms delay
+- ✅ Use Svelte transitions (fly, fade) for animations
+- ✅ Animation duration ~300ms, eased (cubicOut)
+- ✅ Rapid clicks handled correctly (blocked during animation)
+- ✅ Uncompleting toggles immediately (no animation delay needed)
+
+All quality gates pass (build, lint, check) and browser testing confirmed the animations work as expected.
+
+<promise>COMPLETE</promise>
