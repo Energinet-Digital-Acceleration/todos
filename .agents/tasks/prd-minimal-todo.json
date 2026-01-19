@@ -240,7 +240,7 @@
     {
       "id": "US-008",
       "title": "Polish and final styling pass",
-      "status": "in_progress",
+      "status": "done",
       "dependsOn": [
         "US-007"
       ],
@@ -258,8 +258,8 @@
         "Negative case: no jarring layout shifts during interactions"
       ],
       "startedAt": "2026-01-19T13:02:54.445385+00:00",
-      "completedAt": null,
-      "updatedAt": "2026-01-19T13:02:54.445556+00:00"
+      "completedAt": "2026-01-19T13:07:37.760410+00:00",
+      "updatedAt": "2026-01-19T13:07:37.760222+00:00"
     }
   ]
 }
