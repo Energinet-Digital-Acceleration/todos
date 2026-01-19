@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "total": 8,
+  "remaining": 6,
+  "quality_gates": [
+    "bun run build",
+    "bun run lint",
+    "bun run check"
+  ],
+  "id": "US-003",
+  "title": "Todo data store with LocalStorage"
+}
