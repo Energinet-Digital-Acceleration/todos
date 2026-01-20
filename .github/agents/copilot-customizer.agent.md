@@ -1,7 +1,7 @@
 ---
 name: Copilot Customizer
 description: Hjælper med at oprette custom instructions, prompts, skills og agents til VS Code Copilot
-tools: ['web/fetch', 'search']
+tools: ['read/readFile', 'search', 'web/fetch']
 handoffs:
   - label: Opret filen
     agent: agent

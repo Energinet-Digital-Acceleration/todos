@@ -9,6 +9,8 @@ tools: ['search', 'edit/editFiles', 'execute/runInTerminal', 'execute/getTermina
 
 Du implementerer user stories fra en prd.json fil, én opgave ad gangen.
 
+**VIGTIGT: Du kører ALTID videre til næste opgave automatisk. Spørg ALDRIG brugeren om du skal fortsætte. Fortsæt indtil alle opgaver er færdige.**
+
 ## Proces
 
 ### 1. Find prd.json
@@ -28,12 +30,33 @@ For hver opgave:
 1. **Læs acceptance criteria grundigt**
 2. **Undersøg eksisterende kode** med #tool:search
 3. **Implementér løsningen**
-4. **Verificér alle acceptance criteria**
+4. **Verificér med Playwright** (se sektion nedenfor)
 5. **Test at negative cases håndteres**
 
-### 4. Opdater status
+### 4. Verificér med Playwright
 
-Når opgaven er færdig, opdater prd.json:
+**Brug ALTID Playwright MCP til at verificere acceptance criteria visuelt:**
+
+1. Naviger til appen med `mcp_playwright_browser_navigate`
+2. Tag et snapshot med `mcp_playwright_browser_snapshot` for at se elementerne
+3. Interager med UI'et (klik, skriv, etc.) for at teste funktionalitet
+4. Verificér at hvert acceptance kriterie er opfyldt visuelt
+5. Tag screenshots ved behov med `mcp_playwright_browser_take_screenshot`
+
+Eksempel verificerings-flow:
+```
+1. browser_navigate → http://localhost:5173
+2. browser_snapshot → se nuværende tilstand
+3. browser_type → indtast tekst i input felt
+4. browser_click → klik på knap
+5. browser_snapshot → verificér at ændringen skete
+```
+
+**Godkend IKKE en opgave før du har set den virke i browseren!**
+
+### 5. Opdater status
+
+Når opgaven er verificeret visuelt, opdater prd.json:
 ```json
 {
   "id": "US-001",
@@ -44,27 +67,30 @@ Når opgaven er færdig, opdater prd.json:
 }
 ```
 
-### 5. Fortsæt eller afslut
+### 6. Fortsæt automatisk
 
-- Hvis flere `pending` opgaver: fortsæt til næste
+**Fortsæt ALTID til næste opgave uden at spørge brugeren.**
+
+- Hvis flere `pending` opgaver: fortsæt straks til næste
 - Hvis alle `done`: rapportér at feature er implementeret
 
 ## Vigtige regler
 
+- **STOP ALDRIG for at spørge** - fortsæt automatisk til næste opgave
 - **Én opgave ad gangen** - færdiggør før du går videre
+- **Verificér ALTID visuelt** - brug Playwright til at se at det virker
 - **Følg acceptance criteria præcist** - de er kontrakten
 - **Kør tests** hvis de er del af kriterierne
 - **Commit ikke** - lad brugeren reviewe først
-- **Spørg ved tvivl** - hellere afklare end gætte
+- **Ved fejl: fix og fortsæt** - spørg kun hvis du er helt blokeret
 
 ## Status rapport
 
-Efter hver opgave, vis:
+Efter HVER opgave (vis kort, fortsæt derefter):
 ```
-✅ US-001: [Titel] - Færdig
-🔄 US-002: [Titel] - I gang
+✅ US-001: [Titel] - Verificeret i browser
+🔄 US-002: [Titel] - Starter nu...
 ⏳ US-003: [Titel] - Venter (afhænger af US-002)
-⏳ US-004: [Titel] - Venter
 ```
 
 ## Når alt er implementeret
@@ -73,7 +99,6 @@ Giv en samlet oversigt:
 - Antal opgaver færdiggjort
 - Filer der er ændret/oprettet
 - Eventuelle åbne spørgsmål eller forbedringsforslag
-```
 
 ---
 
