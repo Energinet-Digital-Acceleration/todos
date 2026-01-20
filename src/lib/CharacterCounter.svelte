@@ -19,15 +19,13 @@
 </script>
 
 {#if visible}
-  <div
-    transition:fade={{ duration: 200 }}
-    class="mt-2 text-right"
-  >
+  <div transition:fade={{ duration: 200 }} class="mt-2 text-right">
     <span
       class="text-xs font-medium {colorClass} transition-colors duration-200"
       aria-live="polite"
     >
-      {count} {count === 1 ? 'tegn' : 'tegn'}
+      {count}
+      {count === 1 ? 'tegn' : 'tegn'}
     </span>
   </div>
 {/if}

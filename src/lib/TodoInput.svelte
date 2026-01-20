@@ -42,6 +42,6 @@
            dark:focus-visible:ring-offset-neutral-800
            focus:border-stone-300 dark:focus:border-neutral-500"
   />
-  
+
   <CharacterCounter count={value.length} visible={showCounter} />
 </div>
