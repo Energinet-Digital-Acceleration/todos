@@ -1,11 +1,15 @@
 import { writable } from 'svelte/store'
+import { parsePriority } from '../lib/priorityUtils'
 import { loadStorage, saveStorage } from './storage'
+
+export type Priority = 'high' | 'medium' | 'low'
 
 export interface Todo {
   id: string
   title: string
   completed: boolean
   createdAt: number
+  priority?: Priority
 }
 
 function createTodosStore() {
@@ -19,12 +23,16 @@ function createTodosStore() {
     addTodo: (title: string) => {
       const trimmed = title.trim()
       if (!trimmed) return
+
+      const { title: parsedTitle, priority } = parsePriority(trimmed)
+
       update((todos) => [
         {
           id: crypto.randomUUID(),
-          title: trimmed,
+          title: parsedTitle,
           completed: false,
           createdAt: Date.now(),
+          priority,
         },
         ...todos,
       ])
@@ -41,7 +49,17 @@ function createTodosStore() {
     },
     updateTodo: (id: string, title: string) => {
       update((todos) =>
-        todos.map((todo) => (todo.id === id ? { ...todo, title } : todo))
+        todos.map((todo) => {
+          if (todo.id !== id) return todo
+
+          const { title: parsedTitle, priority } = parsePriority(title)
+
+          return {
+            ...todo,
+            title: parsedTitle,
+            priority: priority !== undefined ? priority : todo.priority,
+          }
+        })
       )
     },
     clearCompleted: () => {

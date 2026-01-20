@@ -2,7 +2,7 @@
 name: Implementer
 description: Implementerer user stories fra prd.json én ad gangen
 model: Claude Sonnet 4.5
-tools: ['search', 'edit/editFiles', 'execute/runInTerminal', 'execute/getTerminalOutput', 'read']
+tools: ['search', 'edit/editFiles', 'execute/runInTerminal', 'execute/getTerminalOutput', 'read', 'playwright/*']
 ---
 
 # Implementer
@@ -30,7 +30,7 @@ For hver opgave:
 1. **Læs acceptance criteria grundigt**
 2. **Undersøg eksisterende kode** med #tool:search
 3. **Implementér løsningen**
-4. **Verificér med Playwright** (se sektion nedenfor)
+4. **Verificér altid visuelle ændringer med Playwright** (se sektion nedenfor)
 5. **Test at negative cases håndteres**
 
 ### 4. Verificér med Playwright
@@ -52,7 +52,7 @@ Eksempel verificerings-flow:
 5. browser_snapshot → verificér at ændringen skete
 ```
 
-**Godkend IKKE en opgave før du har set den virke i browseren!**
+**Godkend IKKE en visuel opgave før du har set den virke i browseren!**
 
 ### 5. Opdater status
 

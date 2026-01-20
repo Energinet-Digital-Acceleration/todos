@@ -1,0 +1,261 @@
+{
+  "version": 1,
+  "project": "Todo Prioritet",
+  "overview": "Tilføj mulighed for at sætte prioritet (høj/mellem/lav) på opgaver via hashtag-syntaks i titlen. Prioriteten genkendes automatisk under indtastning med live autocomplete, vises som farvet badge med baggrund, og opgaver sorteres automatisk efter prioritet.",
+  "goals": [
+    "Brugeren kan tilføje prioritet ved at skrive #høj, #mellem, eller #lav i opgavetitlen",
+    "Live autocomplete viser matchende prioritet mens brugeren skriver",
+    "Prioritet vises som farvet badge og baggrund på opgaven",
+    "Opgaver sorteres automatisk: høj → mellem → lav → ingen prioritet",
+    "Redigering af eksisterende opgaver kan ændre prioritet via hashtag-syntaks",
+    "Hashtag-teksten fjernes fra den viste titel"
+  ],
+  "nonGoals": [
+    "Engelske prioritetsnavne (#high, #medium, #low)",
+    "Dropdown/knap til at ændre prioritet direkte",
+    "Filtrering på prioritet",
+    "Migration af eksisterende opgaver"
+  ],
+  "successMetrics": [
+    "Prioritet genkendes korrekt i alle casing-varianter",
+    "Autocomplete vises ved # efterfulgt af mindst ét tegn",
+    "Badge har korrekt farve: rød=høj, gul=mellem, grøn=lav",
+    "Sortering virker korrekt ved oprettelse og ændring"
+  ],
+  "openQuestions": [],
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Udvid Todo interface med priority felt",
+      "status": "done",
+      "dependsOn": [],
+      "description": "Som udvikler vil jeg have et priority felt på Todo interfacet så prioritet kan gemmes og læses.",
+      "acceptanceCriteria": [
+        "Todo interface har et optional 'priority' felt af typen 'high' | 'medium' | 'low' | undefined",
+        "Eksisterende todos uden priority loader korrekt (ingen fejl)",
+        "Eksempel: { id: '1', title: 'Test', completed: false, createdAt: 123, priority: 'high' }",
+        "Negativ case: Kompileringsfejl hvis priority sættes til ugyldig værdi som 'urgent'"
+      ],
+      "startedAt": "2026-01-20T00:00:00.000Z",
+      "completedAt": "2026-01-20T00:01:00.000Z",
+      "updatedAt": "2026-01-20T00:01:00.000Z"
+    },
+    {
+      "id": "US-002",
+      "title": "Opret prioritets-parser utility",
+      "status": "done",
+      "dependsOn": [
+        "US-001"
+      ],
+      "description": "Som udvikler vil jeg have en utility-funktion der parser hashtag-prioritet fra tekst og returnerer titel uden hashtag samt prioritet.",
+      "acceptanceCriteria": [
+        "Funktion parsePriority(text: string) returnerer { title: string, priority: Priority | undefined }",
+        "Parser matcher #høj, #mellem, #lav (case-insensitive)",
+        "Eksempel: parsePriority('Køb bananer #høj') → { title: 'Køb bananer', priority: 'high' }",
+        "Eksempel: parsePriority('Test #MELLEM opgave') → { title: 'Test opgave', priority: 'medium' }",
+        "Eksempel: parsePriority('Uden prioritet') → { title: 'Uden prioritet', priority: undefined }",
+        "Negativ case: parsePriority('Email til #support') → { title: 'Email til #support', priority: undefined } (kun kendte prioriteter matches)"
+      ],
+      "startedAt": "2026-01-20T00:01:00.000Z",
+      "completedAt": "2026-01-20T00:02:00.000Z",
+      "updatedAt": "2026-01-20T00:02:00.000Z"
+    },
+    {
+      "id": "US-003",
+      "title": "Opret funktion til at matche delvis prioritet",
+      "status": "done",
+      "dependsOn": [
+        "US-001"
+      ],
+      "description": "Som udvikler vil jeg have en funktion der matcher delvis indtastet prioritet for autocomplete.",
+      "acceptanceCriteria": [
+        "Funktion matchPriority(partial: string) returnerer matchende prioritet eller undefined",
+        "Matcher fra start af prioritetsnavn (case-insensitive)",
+        "Eksempel: matchPriority('h') → 'high'",
+        "Eksempel: matchPriority('la') → 'low'",
+        "Eksempel: matchPriority('me') → 'medium'",
+        "Eksempel: matchPriority('mellem') → 'medium'",
+        "Negativ case: matchPriority('x') → undefined",
+        "Negativ case: matchPriority('øj') → undefined (skal matche fra start)"
+      ],
+      "startedAt": "2026-01-20T00:02:00.000Z",
+      "completedAt": "2026-01-20T00:02:30.000Z",
+      "updatedAt": "2026-01-20T00:02:30.000Z"
+    },
+    {
+      "id": "US-004",
+      "title": "Opret PriorityBadge komponent",
+      "status": "done",
+      "dependsOn": [
+        "US-001"
+      ],
+      "description": "Som bruger vil jeg se prioriteten som et farvet badge så jeg hurtigt kan identificere vigtige opgaver.",
+      "acceptanceCriteria": [
+        "Komponent PriorityBadge modtager priority prop",
+        "Høj prioritet: rød baggrund med teksten 'Høj'",
+        "Mellem prioritet: gul/orange baggrund med teksten 'Mellem'",
+        "Lav prioritet: grøn baggrund med teksten 'Lav'",
+        "Ingen prioritet (undefined): komponenten renderer ingenting",
+        "Badge har afrundede hjørner og passende padding"
+      ],
+      "startedAt": "2026-01-20T00:02:30.000Z",
+      "completedAt": "2026-01-20T00:03:00.000Z",
+      "updatedAt": "2026-01-20T00:03:00.000Z"
+    },
+    {
+      "id": "US-005",
+      "title": "Opret PriorityAutocomplete komponent",
+      "status": "done",
+      "dependsOn": [
+        "US-003",
+        "US-004"
+      ],
+      "description": "Som bruger vil jeg se foreslået prioritet under inputfeltet når jeg skriver # så jeg ved hvad der vil blive valgt.",
+      "acceptanceCriteria": [
+        "Komponent vises under input når der er et match",
+        "Modtager currentMatch prop (Priority | undefined)",
+        "Viser PriorityBadge for den matchede prioritet",
+        "Viser kort hjælpetekst: 'Tryk Enter for at tilføje'",
+        "Skjules når currentMatch er undefined",
+        "Eksempel: Bruger skriver 'Test #hø' → viser rødt 'Høj' badge"
+      ],
+      "startedAt": "2026-01-20T00:03:00.000Z",
+      "completedAt": "2026-01-20T00:03:30.000Z",
+      "updatedAt": "2026-01-20T00:03:30.000Z"
+    },
+    {
+      "id": "US-006",
+      "title": "Opdater addTodo til at parse prioritet",
+      "status": "done",
+      "dependsOn": [
+        "US-002"
+      ],
+      "description": "Som bruger vil jeg have at min indtastede prioritet automatisk gemmes på opgaven så jeg ikke skal gøre noget ekstra.",
+      "acceptanceCriteria": [
+        "addTodo bruger parsePriority til at udtrække prioritet",
+        "Titel gemmes uden hashtag-delen",
+        "Prioritet gemmes på todo objektet",
+        "Eksempel: addTodo('Køb mælk #høj') → todo med title='Køb mælk' og priority='high'",
+        "Negativ case: addTodo('Test #unknown') → todo med title='Test #unknown' og priority=undefined"
+      ],
+      "startedAt": "2026-01-20T00:03:30.000Z",
+      "completedAt": "2026-01-20T00:04:00.000Z",
+      "updatedAt": "2026-01-20T00:04:00.000Z"
+    },
+    {
+      "id": "US-007",
+      "title": "Opdater updateTodo til at parse prioritet",
+      "status": "done",
+      "dependsOn": [
+        "US-002"
+      ],
+      "description": "Som bruger vil jeg kunne ændre prioritet ved at redigere titlen så jeg kan justere vigtigheden efterfølgende.",
+      "acceptanceCriteria": [
+        "updateTodo bruger parsePriority til at udtrække ny prioritet",
+        "Eksisterende prioritet bevares hvis ingen ny prioritet angives",
+        "Ny prioritet overskriver eksisterende",
+        "Eksempel: updateTodo(id, 'Ny titel #lav') på todo med priority='high' → priority='low'",
+        "Eksempel: updateTodo(id, 'Bare ny titel') på todo med priority='high' → priority='high' (bevaret)"
+      ],
+      "startedAt": "2026-01-20T00:04:00.000Z",
+      "completedAt": "2026-01-20T00:04:30.000Z",
+      "updatedAt": "2026-01-20T00:04:30.000Z"
+    },
+    {
+      "id": "US-008",
+      "title": "Integrer autocomplete i TodoInput",
+      "status": "done",
+      "dependsOn": [
+        "US-003",
+        "US-005"
+      ],
+      "description": "Som bruger vil jeg se live autocomplete når jeg opretter en ny opgave så jeg ved hvilken prioritet der vil blive sat.",
+      "acceptanceCriteria": [
+        "TodoInput tracker om bruger er ved at skrive prioritet (efter #)",
+        "Viser PriorityAutocomplete under input med matchende prioritet",
+        "Opdaterer match live mens bruger skriver",
+        "Eksempel: Bruger skriver 'Opgave #m' → viser 'Mellem' badge",
+        "Eksempel: Bruger skriver 'Opgave #' → ingen match vist endnu",
+        "Autocomplete forsvinder når input submittes eller cleares"
+      ],
+      "startedAt": "2026-01-20T00:04:30.000Z",
+      "completedAt": "2026-01-20T00:05:00.000Z",
+      "updatedAt": "2026-01-20T00:05:00.000Z"
+    },
+    {
+      "id": "US-009",
+      "title": "Vis PriorityBadge på TodoList items",
+      "status": "done",
+      "dependsOn": [
+        "US-004"
+      ],
+      "description": "Som bruger vil jeg se prioritets-badge på mine opgaver så jeg kan se deres vigtighed.",
+      "acceptanceCriteria": [
+        "Hver todo viser PriorityBadge hvis priority er sat",
+        "Badge placeres synligt ved siden af titlen",
+        "Opgaver uden prioritet viser intet badge",
+        "Badge er synligt både i normal og completed tilstand"
+      ],
+      "startedAt": "2026-01-20T00:05:00.000Z",
+      "completedAt": "2026-01-20T00:05:30.000Z",
+      "updatedAt": "2026-01-20T00:05:30.000Z"
+    },
+    {
+      "id": "US-010",
+      "title": "Tilføj farvet baggrund baseret på prioritet",
+      "status": "done",
+      "dependsOn": [
+        "US-009"
+      ],
+      "description": "Som bruger vil jeg have at hele opgaverækken har en subtle farvet baggrund så prioritet er endnu tydeligere.",
+      "acceptanceCriteria": [
+        "Høj prioritet: subtle rød baggrund",
+        "Mellem prioritet: subtle gul/orange baggrund",
+        "Lav prioritet: subtle grøn baggrund",
+        "Ingen prioritet: ingen speciel baggrund (standard)",
+        "Farver fungerer i både light og dark mode",
+        "Baggrund er subtle/transparent så tekst forbliver læsbar"
+      ],
+      "startedAt": "2026-01-20T00:05:30.000Z",
+      "completedAt": "2026-01-20T00:06:00.000Z",
+      "updatedAt": "2026-01-20T00:06:00.000Z"
+    },
+    {
+      "id": "US-011",
+      "title": "Sortér opgaver efter prioritet",
+      "status": "done",
+      "dependsOn": [
+        "US-006"
+      ],
+      "description": "Som bruger vil jeg have at opgaver automatisk sorteres så de vigtigste vises øverst.",
+      "acceptanceCriteria": [
+        "Sorteringsrækkefølge: høj → mellem → lav → ingen prioritet",
+        "Inden for samme prioritet bevares original rækkefølge (createdAt)",
+        "Sortering opdateres når prioritet ændres",
+        "Eksempel: 3 opgaver med lav, høj, ingen → vises som høj, lav, ingen"
+      ],
+      "startedAt": "2026-01-20T00:06:00.000Z",
+      "completedAt": "2026-01-20T00:06:30.000Z",
+      "updatedAt": "2026-01-20T00:06:30.000Z"
+    },
+    {
+      "id": "US-012",
+      "title": "Integrer autocomplete i inline-edit",
+      "status": "done",
+      "dependsOn": [
+        "US-005",
+        "US-007"
+      ],
+      "description": "Som bruger vil jeg se autocomplete når jeg redigerer en eksisterende opgave så jeg kan ændre prioritet.",
+      "acceptanceCriteria": [
+        "Inline-edit viser PriorityAutocomplete under input",
+        "Fungerer samme som i TodoInput",
+        "Autocomplete forsvinder når edit afsluttes",
+        "Eksempel: Redigerer 'Køb mælk' til 'Køb mælk #høj' → viser 'Høj' badge under input"
+      ],
+      "startedAt": "2026-01-20T00:06:30.000Z",
+      "completedAt": "2026-01-20T00:07:00.000Z",
+      "updatedAt": "2026-01-20T00:07:00.000Z"
+    }
+  ]
+}

@@ -1,6 +1,8 @@
 <script lang="ts">
   import { addTodo } from '../stores/todos'
   import CharacterCounter from './CharacterCounter.svelte'
+  import PriorityAutocomplete from './PriorityAutocomplete.svelte'
+  import { completePriorityInText, matchPriority } from './priorityUtils'
 
   let value = $state('')
   let isFocused = $state(false)
@@ -8,12 +10,29 @@
   // Show counter only when input has focus and has content
   const showCounter = $derived(isFocused && value.length > 0)
 
+  // Match priority from input
+  const currentMatch = $derived.by(() => {
+    const hashIndex = value.lastIndexOf('#')
+    if (hashIndex === -1) return undefined
+
+    const afterHash = value.slice(hashIndex + 1)
+    if (!afterHash) return undefined
+
+    return matchPriority(afterHash)
+  })
+
   function handleKeydown(e: KeyboardEvent) {
     if (e.key === 'Enter') {
       e.preventDefault()
-      const trimmed = value.trim()
-      if (trimmed) {
-        addTodo(trimmed)
+      let finalValue = value.trim()
+
+      // If autocomplete has a match, complete the priority text before submitting
+      if (currentMatch) {
+        finalValue = completePriorityInText(finalValue, currentMatch)
+      }
+
+      if (finalValue) {
+        addTodo(finalValue)
         value = ''
       }
     } else if (e.key === 'Escape') {
@@ -44,4 +63,5 @@
   />
 
   <CharacterCounter count={value.length} visible={showCounter} />
+  <PriorityAutocomplete {currentMatch} />
 </div>

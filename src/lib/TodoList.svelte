@@ -1,6 +1,7 @@
 <script lang="ts">
   import { cubicOut } from 'svelte/easing'
   import { fade, fly } from 'svelte/transition'
+  import type { Priority } from '../stores/todos'
   import {
     clearCompleted,
     deleteTodo,
@@ -8,12 +9,40 @@
     toggleTodo,
     updateTodo,
   } from '../stores/todos'
+  import PriorityAutocomplete from './PriorityAutocomplete.svelte'
+  import PriorityBadge from './PriorityBadge.svelte'
+  import { completePriorityInText, matchPriority } from './priorityUtils'
+
+  const PRIORITY_ORDER: Record<Priority, number> = {
+    high: 0,
+    medium: 1,
+    low: 2,
+  }
+
+  function sortByPriority<T extends { priority?: Priority; createdAt: number }>(
+    todos: T[]
+  ): T[] {
+    return [...todos].sort((a, b) => {
+      const aPriority = a.priority ? PRIORITY_ORDER[a.priority] : 999
+      const bPriority = b.priority ? PRIORITY_ORDER[b.priority] : 999
+
+      if (aPriority !== bPriority) {
+        return aPriority - bPriority
+      }
+
+      return a.createdAt - b.createdAt
+    })
+  }
 
   // Filter for active (non-completed) todos
-  const activeTodos = $derived($todos.filter((todo) => !todo.completed))
+  const activeTodos = $derived(
+    sortByPriority($todos.filter((todo) => !todo.completed))
+  )
 
   // Filter for completed todos
-  const completedTodos = $derived($todos.filter((todo) => todo.completed))
+  const completedTodos = $derived(
+    sortByPriority($todos.filter((todo) => todo.completed))
+  )
 
   // Track items transitioning to completed state for animation delay
   let completingIds = $state(new Set<string>())
@@ -21,6 +50,34 @@
   // Track which todo is being edited
   let editingId = $state<string | null>(null)
   let editValue = $state('')
+
+  // Match priority from edit input
+  const editMatch = $derived.by(() => {
+    if (!editingId) return undefined
+
+    const hashIndex = editValue.lastIndexOf('#')
+    if (hashIndex === -1) return undefined
+
+    const afterHash = editValue.slice(hashIndex + 1)
+    if (!afterHash) return undefined
+
+    return matchPriority(afterHash)
+  })
+
+  function getPriorityBgClass(priority?: string): string {
+    if (!priority) return ''
+
+    switch (priority) {
+      case 'high':
+        return 'bg-red-50/50 dark:bg-red-900/10'
+      case 'medium':
+        return 'bg-amber-50/50 dark:bg-amber-900/10'
+      case 'low':
+        return 'bg-green-50/50 dark:bg-green-900/10'
+      default:
+        return ''
+    }
+  }
 
   function handleToggle(id: string, isCompleted: boolean) {
     if (editingId === id || completingIds.has(id)) return
@@ -47,7 +104,14 @@
 
   function saveEdit() {
     if (editingId && editValue.trim()) {
-      updateTodo(editingId, editValue.trim())
+      let finalValue = editValue.trim()
+
+      // If autocomplete has a match, complete the priority text before saving
+      if (editMatch) {
+        finalValue = completePriorityInText(finalValue, editMatch)
+      }
+
+      updateTodo(editingId, finalValue)
     }
     editingId = null
   }
@@ -80,6 +144,7 @@
       <div
         class="group flex items-center gap-3 py-3 px-3 -mx-3
                rounded-xl
+               {getPriorityBgClass(todo.priority)}
                hover:bg-stone-50 dark:hover:bg-neutral-700/50"
         in:fly={{ y: -20, duration: 300, easing: cubicOut }}
         out:fly={{ y: 20, duration: 300, easing: cubicOut }}
@@ -114,32 +179,38 @@
 
         <!-- Todo title or edit input -->
         {#if editingId === todo.id}
-          <!-- svelte-ignore a11y_autofocus -->
-          <input
-            type="text"
-            bind:value={editValue}
-            onkeydown={handleEditKeydown}
-            onblur={saveEdit}
-            class="flex-1 bg-transparent text-[15px] text-stone-700 dark:text-neutral-200
-                   border-b border-stone-300 dark:border-neutral-500
-                   focus:outline-none focus:border-blue-500"
-            autofocus
-          />
+          <div class="flex-1">
+            <!-- svelte-ignore a11y_autofocus -->
+            <input
+              type="text"
+              bind:value={editValue}
+              onkeydown={handleEditKeydown}
+              onblur={saveEdit}
+              class="w-full bg-transparent text-[15px] text-stone-700 dark:text-neutral-200
+                     border-b border-stone-300 dark:border-neutral-500
+                     focus:outline-none focus:border-blue-500"
+              autofocus
+            />
+            <PriorityAutocomplete currentMatch={editMatch} />
+          </div>
         {:else}
-          <!-- svelte-ignore a11y_no_static_element_interactions -->
-          <span
-            role="button"
-            tabindex="0"
-            class="flex-1 text-[15px] leading-relaxed cursor-pointer
-                   {isCompleting(todo.id)
-              ? 'text-stone-400 dark:text-neutral-500 line-through opacity-60'
-              : 'text-stone-700 dark:text-neutral-200'}"
-            ondblclick={() => startEdit(todo.id, todo.title)}
-            onkeydown={(e) =>
-              e.key === 'Enter' && startEdit(todo.id, todo.title)}
-          >
-            {todo.title}
-          </span>
+          <div class="flex-1 flex items-center gap-2">
+            <!-- svelte-ignore a11y_no_static_element_interactions -->
+            <span
+              role="button"
+              tabindex="0"
+              class="text-[15px] leading-relaxed cursor-pointer
+                     {isCompleting(todo.id)
+                ? 'text-stone-400 dark:text-neutral-500 line-through opacity-60'
+                : 'text-stone-700 dark:text-neutral-200'}"
+              ondblclick={() => startEdit(todo.id, todo.title)}
+              onkeydown={(e) =>
+                e.key === 'Enter' && startEdit(todo.id, todo.title)}
+            >
+              {todo.title}
+            </span>
+            <PriorityBadge priority={todo.priority} />
+          </div>
         {/if}
 
         <!-- Delete button (visible on hover) -->
@@ -206,6 +277,7 @@
         <div
           class="group flex items-center gap-3 py-2.5 px-3 -mx-3
                  rounded-xl
+                 {getPriorityBgClass(todo.priority)}
                  hover:bg-stone-50 dark:hover:bg-neutral-700/50"
           in:fly={{ y: 20, duration: 300, easing: cubicOut }}
           out:fade={{ duration: 200 }}
@@ -235,11 +307,14 @@
           </button>
 
           <!-- Muted todo title with strikethrough -->
-          <span
-            class="flex-1 text-[15px] text-stone-400 dark:text-neutral-500 line-through"
-          >
-            {todo.title}
-          </span>
+          <div class="flex-1 flex items-center gap-2">
+            <span
+              class="text-[15px] text-stone-400 dark:text-neutral-500 line-through"
+            >
+              {todo.title}
+            </span>
+            <PriorityBadge priority={todo.priority} />
+          </div>
 
           <!-- Delete button -->
           <button
