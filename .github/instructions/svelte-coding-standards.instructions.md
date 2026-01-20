@@ -1,216 +1,36 @@
 ---
-applyTo: '*.svelte'
+description: Svelte 5 kodestandarder med runes og snippets
+applyTo: "**/*.svelte,**/*.svelte.ts"
 ---
 
-# Svelte 5 Coding Standards
+# Svelte 5 kodestandarder
 
-## Runes - Det nye reaktivitetssystem
+Følg [generelle TypeScript retningslinjer](./typescript.instructions.md).
 
-### $state - Reaktiv tilstand
-- Brug `$state()` til at erklære reaktiv tilstand
-- Arrays og objekter bliver automatisk dybt reaktive (proxies)
-- Brug `$state.raw()` til store objekter/arrays der ikke skal muteres (bedre performance)
-- Brug `$state.snapshot()` når du skal sende state til eksterne biblioteker
+## Runes
 
-```svelte
-<script>
-  let count = $state(0);
-  let todos = $state([{ done: false, text: 'Lær Svelte 5' }]);
-  
-  // For store read-only datasæt
-  let bigData = $state.raw(fetchedData);
-</script>
-```
+- Brug `$state()` til reaktiv tilstand
+- Brug `$state.raw()` til store datasæt der ikke skal muteres
+- Brug `$derived()` til beregnede værdier - **aldrig** `$effect` til at synkronisere state
+- Brug `$derived.by()` til komplekse beregninger med flere linjer
+- `$effect` kun til: DOM-manipulation, browser APIs, eksterne subscriptions
+- Returner altid cleanup-funktion fra `$effect` når relevant
 
-### $derived - Afledt tilstand
-- Brug `$derived()` i stedet for `$:` til beregnede værdier
-- Brug `$derived.by()` til komplekse beregninger der kræver flere linjer
-- Undgå at bruge `$effect` til at synkronisere state - brug `$derived` i stedet
+## Props og events
 
-```svelte
-<script>
-  let count = $state(0);
-  let doubled = $derived(count * 2);
-  
-  let total = $derived.by(() => {
-    let sum = 0;
-    for (const item of items) {
-      sum += item.value;
-    }
-    return sum;
-  });
-</script>
-```
+- Destructure props med `let { prop } = $props()`
+- Brug callback props frem for `$bindable` hvor muligt
+- Brug `onclick`, ikke `on:click`
+- Håndter modifiers med standard JS: `e.preventDefault()`
 
-### $effect - Side effects
-- `$effect` bør bruges sparsomt - primært til DOM-manipulation, analytics, og eksterne biblioteker
-- **Undgå** at opdatere state i effects - det fører ofte til uendelige loops
-- Brug teardown-funktioner til cleanup (f.eks. clearInterval, removeEventListener)
-- Effects kører efter DOM er opdateret
+## Snippets
 
-```svelte
-<script>
-  let canvas;
-  let color = $state('#ff3e00');
-  
-  $effect(() => {
-    const context = canvas.getContext('2d');
-    context.fillStyle = color;
-    context.fillRect(0, 0, 100, 100);
-    
-    // Cleanup function
-    return () => {
-      context.clearRect(0, 0, 100, 100);
-    };
-  });
-</script>
-```
+- Brug `{#snippet}` og `{@render}` - slots er deprecated
+- Type snippets med `Snippet<[ParamTypes]>` fra 'svelte'
 
-### $props - Komponent properties
-- Brug destructuring med `$props()` til at modtage props
-- Definer fallback-værdier direkte i destructuring
-- Tilføj TypeScript types for bedre developer experience
-- Brug `$props.id()` til unikke element-IDs
+## Anti-patterns
 
-```svelte
-<script lang="ts">
-  interface Props {
-    title: string;
-    count?: number;
-    onUpdate?: (value: number) => void;
-  }
-  
-  let { title, count = 0, onUpdate }: Props = $props();
-  const uid = $props.id();
-</script>
-```
-
-### $bindable - Two-way binding
-- Brug `$bindable()` kun når nødvendigt - det gør dataflow sværere at forstå
-- Marker props som bindable når parent-komponenten skal kunne binde til dem
-
-```svelte
-<script>
-  let { value = $bindable(''), ...props } = $props();
-</script>
-
-<input bind:value={value} {...props} />
-```
-
-## Snippets - Genbrugelig markup
-
-### Grundlæggende snippets
-- Brug `{#snippet}` i stedet for slots (deprecated i Svelte 5)
-- Snippets kan have parametre og bruges med `{@render}`
-- Snippets er mere fleksible end slots
-
-```svelte
-{#snippet card(title, content)}
-  <div class="card">
-    <h2>{title}</h2>
-    <p>{content}</p>
-  </div>
-{/snippet}
-
-{@render card('Min titel', 'Mit indhold')}
-```
-
-### Snippets som props
-- Send snippets til komponenter som props
-- Brug `children` snippet til default content
-
-```svelte
-<!-- Parent -->
-<Card>
-  {#snippet header()}
-    <h1>Overskrift</h1>
-  {/snippet}
-  
-  Default indhold her
-</Card>
-
-<!-- Card.svelte -->
-<script>
-  let { header, children } = $props();
-</script>
-
-<div class="card">
-  {#if header}
-    {@render header()}
-  {/if}
-  {@render children?.()}
-</div>
-```
-
-## Best Practices
-
-### State Management
-1. Hold state så lokalt som muligt
-2. Brug callback props til at kommunikere ændringer opad
-3. Del state via `.svelte.ts` filer når nødvendigt (men eksporter ikke direkte reassignable state)
-
-```typescript
-// stores/counter.svelte.ts
-let count = $state(0);
-
-export function getCount() {
-  return count;
-}
-
-export function increment() {
-  count += 1;
-}
-```
-
-### Klasser med reaktiv state
-- Brug `$state` i class fields for reaktive properties
-- Brug arrow functions for metoder der skal bevare `this`-context
-
-```svelte
-<script>
-  class Todo {
-    done = $state(false);
-    text = $state('');
-    
-    toggle = () => {
-      this.done = !this.done;
-    };
-  }
-</script>
-```
-
-### Event handlers
-- Brug moderne event handler syntax: `onclick` i stedet for `on:click`
-- Brug function bindings hvor muligt i stedet for effects
-
-```svelte
-<button onclick={() => count++}>
-  Klik mig
-</button>
-```
-
-### TypeScript
-- Brug `lang="ts"` i script tags
-- Definer interfaces for props
-- Brug `Snippet` type fra 'svelte' til at type snippet props
-
-```svelte
-<script lang="ts">
-  import type { Snippet } from 'svelte';
-  
-  interface Props {
-    data: Item[];
-    row: Snippet<[Item]>;
-  }
-  
-  let { data, row }: Props = $props();
-</script>
-```
-
-## Anti-patterns at undgå
-
-1. **Brug ikke `$effect` til at synkronisere state** - brug `$derived` i stedet
-2. **Mutér ikke props** medmindre de er markeret med `$bindable`
-3. **Undgå at destructure reaktive værdier** - referencerne bliver ikke reaktive
-4. **Brug ikke slots** - de er deprecated, brug snippets i stedet
-5. **Undgå cykliske effects** - brug `untrack()` hvis nødvendigt
+- ❌ `$effect` til at opdatere `$state`
+- ❌ Destructure reaktive værdier til variabler
+- ❌ Slots (`<slot />`)
+- ❌ `on:click|preventDefault`

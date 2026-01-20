@@ -1,7 +1,12 @@
 <script lang="ts">
   import { addTodo } from '../stores/todos'
+  import CharacterCounter from './CharacterCounter.svelte'
 
   let value = $state('')
+  let isFocused = $state(false)
+
+  // Show counter only when input has focus and has content
+  const showCounter = $derived(isFocused && value.length > 0)
 
   function handleKeydown(e: KeyboardEvent) {
     if (e.key === 'Enter') {
@@ -23,6 +28,8 @@
     type="text"
     bind:value
     onkeydown={handleKeydown}
+    onfocus={() => (isFocused = true)}
+    onblur={() => (isFocused = false)}
     placeholder="Tilføj en opgave..."
     aria-label="Tilføj en opgave"
     class="w-full bg-stone-50 dark:bg-neutral-700/50
@@ -35,4 +42,6 @@
            dark:focus-visible:ring-offset-neutral-800
            focus:border-stone-300 dark:focus:border-neutral-500"
   />
+  
+  <CharacterCounter count={value.length} visible={showCounter} />
 </div>
