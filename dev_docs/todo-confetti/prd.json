@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "project": "Todo Konfetti",
+  "overview": "Når en bruger markerer en todo som færdig, affyres en festlig konfetti-eksplosion fra checkboxens position. Effekten bruger canvas-confetti biblioteket og fyrer hver gang en opgave toggles til færdig.",
+  "goals": [
+    "Tilføj visuel feedback/fejring når opgaver udføres",
+    "Konfetti skal udgå fra den specifikke checkbox der blev klikket",
+    "Effekten skal være festlig og synlig"
+  ],
+  "nonGoals": [
+    "Ingen reduced motion support",
+    "Ingen lyd",
+    "Ingen konfetti ved andre handlinger (sletning, redigering, etc.)",
+    "Ingen mulighed for at slå konfetti fra"
+  ],
+  "successMetrics": [
+    "Konfetti vises ved klik på checkbox når opgave markeres færdig",
+    "Konfetti kommer fra checkboxens position",
+    "Effekten føles festlig (passende mængde partikler og varighed)"
+  ],
+  "openQuestions": [],
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Tilføj canvas-confetti dependency",
+      "status": "done",
+      "dependsOn": [],
+      "description": "Som udvikler vil jeg have canvas-confetti npm package installeret så jeg kan bruge biblioteket til at vise konfetti.",
+      "acceptanceCriteria": [
+        "canvas-confetti er tilføjet i package.json dependencies",
+        "npm install / bun install kører uden fejl",
+        "Eksempel: import confetti from 'canvas-confetti' kompilerer uden TypeScript fejl",
+        "Negativ case: Ingen andre ændringer i kodebasen end package.json og lockfile"
+      ],
+      "startedAt": "2026-01-20T00:00:00.000Z",
+      "completedAt": "2026-01-20T00:00:00.000Z",
+      "updatedAt": "2026-01-20T00:00:00.000Z"
+    },
+    {
+      "id": "US-002",
+      "title": "Opret konfetti utility funktion",
+      "status": "done",
+      "dependsOn": [
+        "US-001"
+      ],
+      "description": "Som udvikler vil jeg have en genbrugelig funktion der affyrer konfetti fra en given DOM-position så jeg nemt kan kalde den fra komponenter.",
+      "acceptanceCriteria": [
+        "Ny fil src/lib/confetti.ts eksporterer en fireConfetti funktion",
+        "Funktionen tager et HTMLElement eller MouseEvent som parameter",
+        "Konfetti affyres fra elementets/eventens position på skærmen",
+        "Eksempel: fireConfetti(checkboxElement) affyrer konfetti fra checkboxens centrum",
+        "Konfetti-indstillinger er festlige: tilstrækkeligt antal partikler, passende spredning og varighed",
+        "Negativ case: Funktionen fejler ikke hvis elementet ikke findes (graceful handling)"
+      ],
+      "startedAt": "2026-01-20T00:00:00.000Z",
+      "completedAt": "2026-01-20T00:00:00.000Z",
+      "updatedAt": "2026-01-20T00:00:00.000Z"
+    },
+    {
+      "id": "US-003",
+      "title": "Integrer konfetti i TodoList ved toggle",
+      "status": "done",
+      "dependsOn": [
+        "US-002"
+      ],
+      "description": "Som bruger vil jeg se konfetti fra checkboxen når jeg markerer en opgave som færdig så jeg får en festlig belønning.",
+      "acceptanceCriteria": [
+        "Konfetti affyres når en opgave skifter fra ikke-færdig til færdig",
+        "Konfetti kommer fra den specifikke checkbox der blev klikket",
+        "Eksempel: Klik på checkbox for 'Køb mælk' → konfetti fra den checkbox",
+        "Konfetti affyres igen hvis samme opgave toggles færdig → ikke-færdig → færdig",
+        "Negativ case: Ingen konfetti når opgave toggles fra færdig til ikke-færdig",
+        "Negativ case: Ingen konfetti ved sletning eller redigering af opgaver"
+      ],
+      "startedAt": "2026-01-20T00:00:00.000Z",
+      "completedAt": "2026-01-20T00:00:00.000Z",
+      "updatedAt": "2026-01-20T00:00:00.000Z"
+    }
+  ]
+}

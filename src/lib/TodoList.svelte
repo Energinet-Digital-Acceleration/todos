@@ -9,6 +9,7 @@
     toggleTodo,
     updateTodo,
   } from '../stores/todos'
+  import { fireConfetti } from './confetti'
   import PriorityAutocomplete from './PriorityAutocomplete.svelte'
   import PriorityBadge from './PriorityBadge.svelte'
   import { completePriorityInText, matchPriority } from './priorityUtils'
@@ -79,11 +80,17 @@
     }
   }
 
-  function handleToggle(id: string, isCompleted: boolean) {
+  function handleToggle(id: string, isCompleted: boolean, event?: MouseEvent) {
     if (editingId === id || completingIds.has(id)) return
 
     if (!isCompleted) {
       completingIds = new Set([...completingIds, id])
+
+      // Fire confetti when marking as complete
+      if (event?.target instanceof HTMLElement) {
+        fireConfetti(event.target)
+      }
+
       setTimeout(() => {
         toggleTodo(id)
         completingIds = new Set([...completingIds].filter((i) => i !== id))
@@ -151,7 +158,7 @@
       >
         <!-- Circular checkbox -->
         <button
-          onclick={() => handleToggle(todo.id, todo.completed)}
+          onclick={(e) => handleToggle(todo.id, todo.completed, e)}
           class="flex-shrink-0 w-[22px] h-[22px] rounded-full
                  border-2
                  {isCompleting(todo.id)
@@ -284,7 +291,7 @@
         >
           <!-- Checked circular checkbox -->
           <button
-            onclick={() => handleToggle(todo.id, todo.completed)}
+            onclick={(e) => handleToggle(todo.id, todo.completed, e)}
             class="flex-shrink-0 w-[22px] h-[22px] rounded-full
                    border-2 border-stone-200 dark:border-neutral-600
                    bg-stone-100 dark:bg-neutral-700
