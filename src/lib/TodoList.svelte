@@ -13,6 +13,7 @@
   import PriorityAutocomplete from './PriorityAutocomplete.svelte'
   import PriorityBadge from './PriorityBadge.svelte'
   import { completePriorityInText, matchPriority } from './priorityUtils'
+  import TodoDueDate from './TodoDueDate.svelte'
 
   const PRIORITY_ORDER: Record<Priority, number> = {
     high: 0,
@@ -217,6 +218,7 @@
               {todo.title}
             </span>
             <PriorityBadge priority={todo.priority} />
+            <TodoDueDate todoId={todo.id} dueDate={todo.dueDate} />
           </div>
         {/if}
 

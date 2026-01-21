@@ -1,6 +1,12 @@
 <script lang="ts">
   import { addTodo } from '../stores/todos'
   import CharacterCounter from './CharacterCounter.svelte'
+  import DueDateAutocomplete from './DueDateAutocomplete.svelte'
+  import {
+    completeDateInText,
+    matchDueDate,
+    parseDueDate,
+  } from './dueDateUtils'
   import PriorityAutocomplete from './PriorityAutocomplete.svelte'
   import { completePriorityInText, matchPriority } from './priorityUtils'
 
@@ -11,7 +17,7 @@
   const showCounter = $derived(isFocused && value.length > 0)
 
   // Match priority from input
-  const currentMatch = $derived.by(() => {
+  const currentPriorityMatch = $derived.by(() => {
     const hashIndex = value.lastIndexOf('#')
     if (hashIndex === -1) return undefined
 
@@ -21,18 +27,33 @@
     return matchPriority(afterHash)
   })
 
+  // Match due date from input
+  const currentDateMatch = $derived.by(() => {
+    if (!value.trim()) return undefined
+    return matchDueDate(value)
+  })
+
   function handleKeydown(e: KeyboardEvent) {
     if (e.key === 'Enter') {
       e.preventDefault()
       let finalValue = value.trim()
 
-      // If autocomplete has a match, complete the priority text before submitting
-      if (currentMatch) {
-        finalValue = completePriorityInText(finalValue, currentMatch)
+      // If date autocomplete has a match, complete the date text before submitting
+      if (currentDateMatch) {
+        finalValue = completeDateInText(finalValue, currentDateMatch)
+      }
+
+      // If priority autocomplete has a match, complete the priority text before submitting
+      if (currentPriorityMatch) {
+        finalValue = completePriorityInText(finalValue, currentPriorityMatch)
       }
 
       if (finalValue) {
-        addTodo(finalValue)
+        // Parse due date from the final value
+        const { title, dueDate } = parseDueDate(finalValue)
+
+        // Add todo with cleaned title and optional due date
+        addTodo(title, dueDate ? { dueDate } : undefined)
         value = ''
       }
     } else if (e.key === 'Escape') {
@@ -63,5 +84,6 @@
   />
 
   <CharacterCounter count={value.length} visible={showCounter} />
-  <PriorityAutocomplete {currentMatch} />
+  <PriorityAutocomplete currentMatch={currentPriorityMatch} />
+  <DueDateAutocomplete currentMatch={currentDateMatch} />
 </div>

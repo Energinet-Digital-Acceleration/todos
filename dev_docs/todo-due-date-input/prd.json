@@ -1,0 +1,164 @@
+{
+  "version": 1,
+  "project": "Due Date ved oprettelse",
+  "overview": "Brugeren skal kunne skrive naturlige danske datoer direkte i todo-teksten (f.eks. 'Køb mælk i morgen' eller 'Møde 25/1'), som automatisk parses og vises som preview med autocomplete. Datoen fjernes fra titlen efter oprettelse.",
+  "goals": [
+    "Parse naturlige danske datoer fra todo-tekst: 'i dag', 'i morgen', 'i overmorgen'",
+    "Parse ugedage: 'mandag', 'tirsdag', osv. (næste forekomst, altid fremad)",
+    "Parse specifikke datoer: '25/1', '25. januar', '25-1'",
+    "Vise autocomplete-preview af den parsede dato mens brugeren skriver",
+    "Fjern dato-teksten fra titlen efter parsing",
+    "Nulstil alt efter oprettelse"
+  ],
+  "nonGoals": [
+    "Magiske keywords/prefixes som '@' eller '!'",
+    "Genvejsknapper i UI",
+    "Relative udtryk som 'om 3 dage' eller 'næste uge'",
+    "Tidspunkter (kun datoer)"
+  ],
+  "successMetrics": [
+    "Brugeren kan oprette en opgave med due date uden at bruge musen",
+    "Autocomplete viser den parsede dato i realtid",
+    "Datoer parses korrekt på dansk",
+    "Titlen ser ren ud efter oprettelse"
+  ],
+  "openQuestions": [],
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Parse relative danske datoer",
+      "status": "done",
+      "startedAt": "2026-01-20T12:00:00.000Z",
+      "completedAt": "2026-01-20T12:05:00.000Z",
+      "updatedAt": "2026-01-20T12:05:00.000Z",
+      "dependsOn": [],
+      "description": "Som bruger vil jeg kunne skrive 'i dag', 'i morgen' eller 'i overmorgen' i min todo-tekst, så datoen automatisk sættes som due date.",
+      "acceptanceCriteria": [
+        "parseDueDate('Køb mælk i dag') returnerer { title: 'Køb mælk', dueDate: <dagens dato> }",
+        "parseDueDate('Møde i morgen') returnerer { title: 'Møde', dueDate: <morgendagens dato> }",
+        "parseDueDate('Fest i overmorgen') returnerer { title: 'Fest', dueDate: <om 2 dage> }",
+        "Parsing er case-insensitive: 'I DAG', 'I dag', 'i dag' virker alle",
+        "Tekst uden dato returnerer { title: <original>, dueDate: undefined }",
+        "Datoen sættes til kl. 12:00 for at undgå timezone-problemer"
+      ]
+    },
+    {
+      "id": "US-002",
+      "title": "Parse danske ugedage",
+      "status": "done",
+      "startedAt": "2026-01-20T12:07:00.000Z",
+      "completedAt": "2026-01-20T12:10:00.000Z",
+      "updatedAt": "2026-01-20T12:10:00.000Z",
+      "dependsOn": [
+        "US-001"
+      ],
+      "description": "Som bruger vil jeg kunne skrive en ugedag (f.eks. 'mandag', 'tirsdag') i min todo-tekst, så datoen sættes til næste forekomst af den dag.",
+      "acceptanceCriteria": [
+        "parseDueDate('Møde mandag') returnerer { title: 'Møde', dueDate: <næste mandag> }",
+        "Alle 7 ugedage understøttes: mandag, tirsdag, onsdag, torsdag, fredag, lørdag, søndag",
+        "Hvis i dag er mandag og bruger skriver 'mandag', sættes datoen til næste mandag (om 7 dage)",
+        "Parsing er case-insensitive",
+        "Ugedagen kan stå hvor som helst i teksten: 'mandag møde' og 'møde mandag' virker begge"
+      ]
+    },
+    {
+      "id": "US-003",
+      "title": "Parse specifikke datoer",
+      "status": "done",
+      "startedAt": "2026-01-20T12:10:00.000Z",
+      "completedAt": "2026-01-20T12:15:00.000Z",
+      "updatedAt": "2026-01-20T12:15:00.000Z",
+      "dependsOn": [
+        "US-001"
+      ],
+      "description": "Som bruger vil jeg kunne skrive en specifik dato (f.eks. '25/1', '25. januar') i min todo-tekst, så datoen sættes præcist.",
+      "acceptanceCriteria": [
+        "parseDueDate('Møde 25/1') returnerer { title: 'Møde', dueDate: <25. januar> }",
+        "parseDueDate('Møde 25-1') returnerer { title: 'Møde', dueDate: <25. januar> }",
+        "parseDueDate('Møde 25. januar') returnerer { title: 'Møde', dueDate: <25. januar> }",
+        "parseDueDate('Møde 25. jan') returnerer { title: 'Møde', dueDate: <25. januar> }",
+        "Alle 12 måneder understøttes med fulde og forkortede navne på dansk",
+        "Hvis datoen er i fortiden (f.eks. '1/1' i februar), sættes året til næste år",
+        "Ugyldige datoer (f.eks. '31/2') ignoreres og returnerer undefined dueDate"
+      ]
+    },
+    {
+      "id": "US-004",
+      "title": "matchDueDate funktion til autocomplete",
+      "status": "done",
+      "startedAt": "2026-01-20T12:15:00.000Z",
+      "completedAt": "2026-01-20T12:18:00.000Z",
+      "updatedAt": "2026-01-20T12:18:00.000Z",
+      "dependsOn": [
+        "US-001",
+        "US-002",
+        "US-003"
+      ],
+      "description": "Som udvikler vil jeg have en matchDueDate funktion der returnerer den parsede dato til brug i autocomplete-preview.",
+      "acceptanceCriteria": [
+        "matchDueDate('Køb mælk i mor') returnerer { date: <morgendagens dato>, matchedText: 'i mor', fullText: 'i morgen' }",
+        "matchDueDate('Køb mælk man') returnerer { date: <næste mandag>, matchedText: 'man', fullText: 'mandag' }",
+        "matchDueDate('Køb mælk') returnerer undefined (ingen match)",
+        "Funktionen matcher partial input for autocomplete (f.eks. 'i mo' matcher 'i morgen')",
+        "Returnerer den formaterede dato-tekst til visning i autocomplete"
+      ]
+    },
+    {
+      "id": "US-005",
+      "title": "DueDateAutocomplete komponent",
+      "status": "done",
+      "startedAt": "2026-01-20T12:18:00.000Z",
+      "completedAt": "2026-01-20T12:20:00.000Z",
+      "updatedAt": "2026-01-20T12:20:00.000Z",
+      "dependsOn": [
+        "US-004"
+      ],
+      "description": "Som bruger vil jeg se en preview af den genkendte dato mens jeg skriver, så jeg ved at systemet har forstået min dato korrekt.",
+      "acceptanceCriteria": [
+        "Komponenten viser den parsede dato formateret på dansk (f.eks. '21. jan 2026')",
+        "Komponenten vises kun når en dato er genkendt",
+        "Styling matcher eksisterende PriorityAutocomplete komponent",
+        "Viser 'Tryk Enter for at tilføje' som hjælpetekst",
+        "Viser også relative tekst hvor relevant (f.eks. 'I morgen' ved siden af datoen)"
+      ]
+    },
+    {
+      "id": "US-006",
+      "title": "Udvid addTodo med dueDate parameter",
+      "status": "done",
+      "startedAt": "2026-01-20T12:05:00.000Z",
+      "completedAt": "2026-01-20T12:07:00.000Z",
+      "updatedAt": "2026-01-20T12:07:00.000Z",
+      "dependsOn": [],
+      "description": "Som udvikler vil jeg kunne sende en dueDate med til addTodo funktionen, så opgaver kan oprettes med en due date.",
+      "acceptanceCriteria": [
+        "addTodo('Køb mælk', { dueDate: 1737388800000 }) opretter todo med dueDate sat",
+        "addTodo('Køb mælk') opretter todo uden dueDate (backwards compatible)",
+        "Den nye todo har dueDate feltet sat korrekt i localStorage",
+        "Eksisterende funktionalitet (priority parsing) er uændret"
+      ]
+    },
+    {
+      "id": "US-007",
+      "title": "Integrer dato-parsing i TodoInput",
+      "status": "done",
+      "startedAt": "2026-01-20T12:20:00.000Z",
+      "completedAt": "2026-01-20T12:30:00.000Z",
+      "updatedAt": "2026-01-20T12:30:00.000Z",
+      "dependsOn": [
+        "US-004",
+        "US-005",
+        "US-006"
+      ],
+      "description": "Som bruger vil jeg kunne skrive en todo med dato i inputfeltet og se autocomplete, så jeg kan oprette opgaver med due date hurtigt.",
+      "acceptanceCriteria": [
+        "Når jeg skriver 'Køb mælk i morgen' vises DueDateAutocomplete med morgendagens dato",
+        "Når jeg trykker Enter, oprettes todo med title 'Køb mælk' og korrekt dueDate",
+        "Dato-teksten ('i morgen') fjernes fra titlen",
+        "Input-feltet nulstilles helt efter oprettelse",
+        "Priority og due date kan bruges sammen: 'Køb mælk i morgen #høj' virker",
+        "Autocomplete for både priority og due date kan vises samtidig hvis begge matcher"
+      ]
+    }
+  ]
+}
