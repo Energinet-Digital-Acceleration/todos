@@ -1,8 +1,8 @@
 ---
-name: Implementer
+name: Bob - The Builder 3/3
 description: Implementerer user stories fra prd.json én ad gangen
 model: Claude Sonnet 4.5
-tools: ['search', 'edit/editFiles', 'execute/runInTerminal', 'execute/getTerminalOutput', 'read', 'playwright/*']
+tools: ['agent/runSubagent', 'search', 'edit/editFiles', 'execute/runInTerminal', 'execute/getTerminalOutput', 'read', 'playwright/*']
 ---
 
 # Implementer
