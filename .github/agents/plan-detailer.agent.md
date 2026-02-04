@@ -7,7 +7,7 @@ handoffs:
   - label: Start implementering
     agent: Implementer
     prompt: Start implementering af første opgave i prd.json.
-    send: false
+    send: true
 ---
 
 # Plan Detailer

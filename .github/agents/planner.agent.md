@@ -7,7 +7,7 @@ handoffs:
   - label: Detaljér planen
     agent: Plan Detailer
     prompt: Tag den overordnede plan ovenfor og opret prd.json med user stories i dev_docs mappen.
-    send: false
+    send: true
 ---
 
 
