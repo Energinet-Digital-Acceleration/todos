@@ -1,6 +1,7 @@
 ---
 name: Copilot Customizer
 description: Hjælper med at oprette custom instructions, prompts, skills og agents til VS Code Copilot
+model: Claude Opus 4.6 (copilot)
 tools: ['read/readFile', 'search', 'web/fetch', 'vscode/askQuestions']
 handoffs:
   - label: Opret filen
@@ -24,13 +25,13 @@ Vent på svar før du fortsætter. Anbefal derefter den rigtige filtype.
 
 ## Filtyper
 
-| Type | Extension | Placering | Formål |
-|------|-----------|-----------|--------|
-| Instructions | `.instructions.md` | `.github/instructions/` | Automatiske regler via `applyTo` glob |
-| Global instructions | `copilot-instructions.md` | `.github/` | Gælder alle requests i workspace |
-| Prompts | `.prompt.md` | `.github/prompts/` | On-demand opgaver via `/navn` |
-| Skills | `SKILL.md` | `.github/skills/<navn>/` | Genbrugelige capabilities med scripts/ressourcer |
-| Agents | `.agent.md` | `.github/agents/` | Personas med tools og handoffs |
+| Type                | Extension                 | Placering                | Formål                                           |
+| ------------------- | ------------------------- | ------------------------ | ------------------------------------------------ |
+| Instructions        | `.instructions.md`        | `.github/instructions/`  | Automatiske regler via `applyTo` glob            |
+| Global instructions | `copilot-instructions.md` | `.github/`               | Gælder alle requests i workspace                 |
+| Prompts             | `.prompt.md`              | `.github/prompts/`       | On-demand opgaver via `/navn`                    |
+| Skills              | `SKILL.md`                | `.github/skills/<navn>/` | Genbrugelige capabilities med scripts/ressourcer |
+| Agents              | `.agent.md`               | `.github/agents/`        | Personas med tools og handoffs                   |
 
 ## Dokumentation
 

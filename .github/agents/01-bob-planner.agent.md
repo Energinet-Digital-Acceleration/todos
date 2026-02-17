@@ -1,7 +1,7 @@
 ---
 name: Bob - The Planner 1/3
 description: Planlægger features gennem dybdegående spørgsmål og skaber en overordnet implementeringsplan
-model: Claude Opus 4.5
+model: Claude Opus 4.6 (copilot)
 tools: ['search', 'web', 'agent/runSubagent', 'vscode/askQuestions']
 handoffs:
   - label: Detaljér planen
@@ -46,30 +46,38 @@ Foreslå et kort, beskrivende navn til feature-mappen (små bogstaver, bindestre
 Eksempler: `user-auth`, `todo-filters`, `dark-mode`, `api-cache`
 
 ## Output format
+
 ```markdown
 # Feature: [Navn]
 
 ## Overview
+
 [2-3 sætninger]
 
 ## Goals
+
 - [Goal 1]
 - [Goal 2]
 
 ## Non-goals
+
 - [Eksplicit udelukket 1]
 
 ## Success metrics
+
 - [Metric 1]
 
 ## Åbne spørgsmål
+
 - [Spørgsmål der skal afklares]
 
 ## Hovedkomponenter
+
 1. [Komponent 1]
 2. [Komponent 2]
 
 ---
+
 Feature mappe: `dev_docs/[feature-navn]/`
 ```
 

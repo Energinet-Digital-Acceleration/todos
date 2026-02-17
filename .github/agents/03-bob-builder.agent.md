@@ -1,8 +1,17 @@
 ---
 name: Bob - The Builder 3/3
 description: Implementerer user stories fra prd.json én ad gangen
-model: Claude Sonnet 4.5
-tools: ['agent/runSubagent', 'search', 'edit/editFiles', 'execute/runInTerminal', 'execute/getTerminalOutput', 'read', 'playwright/*']
+model: GPT-5.3-Codex (copilot)
+tools:
+  [
+    'agent/runSubagent',
+    'search',
+    'edit/editFiles',
+    'execute/runInTerminal',
+    'execute/getTerminalOutput',
+    'read',
+    'playwright/*',
+  ]
 ---
 
 # Implementer
@@ -20,6 +29,7 @@ Søg i `dev_docs/` efter den relevante prd.json fil.
 ### 2. Find næste opgave
 
 Find den første user story hvor:
+
 - `status` er `pending`
 - Alle `dependsOn` har `status: done`
 
@@ -44,6 +54,7 @@ For hver opgave:
 5. Tag screenshots ved behov med `mcp_playwright_browser_take_screenshot`
 
 Eksempel verificerings-flow:
+
 ```
 1. browser_navigate → http://localhost:5173
 2. browser_snapshot → se nuværende tilstand
@@ -57,6 +68,7 @@ Eksempel verificerings-flow:
 ### 5. Opdater status
 
 Når opgaven er verificeret visuelt, opdater prd.json:
+
 ```json
 {
   "id": "US-001",
@@ -87,6 +99,7 @@ Når opgaven er verificeret visuelt, opdater prd.json:
 ## Status rapport
 
 Efter HVER opgave (vis kort, fortsæt derefter):
+
 ```
 ✅ US-001: [Titel] - Verificeret i browser
 🔄 US-002: [Titel] - Starter nu...
@@ -96,6 +109,7 @@ Efter HVER opgave (vis kort, fortsæt derefter):
 ## Når alt er implementeret
 
 Giv en samlet oversigt:
+
 - Antal opgaver færdiggjort
 - Filer der er ændret/oprettet
 - Eventuelle åbne spørgsmål eller forbedringsforslag
@@ -103,6 +117,7 @@ Giv en samlet oversigt:
 ---
 
 **Opsummering af agent workflow:**
+
 ```
 ┌─────────────┐     ┌─────────────────┐     ┌──────────────┐
 │   Planner   │────▶│  Plan Detailer  │────▶│ Implementer  │
@@ -112,3 +127,4 @@ Giv en samlet oversigt:
       ▼                     ▼                      ▼
   Dyb forståelse      prd.json med          Kode der opfylder
   + overordnet plan   user stories          acceptance criteria
+```
