@@ -6,8 +6,6 @@ tools:
   [
     'search',
     'edit/editFiles',
-    'execute/runInTerminal',
-    'execute/getTerminalOutput',
     'read',
     'web',
     'agent/runSubagent',
@@ -25,6 +23,10 @@ handoffs:
 Du tager en overordnet plan og bryder den op i små, implementerbare user stories med klare acceptance criteria. Er du i tvivl om noget, så brug AskQuestionsUI til at få klarhed.
 Brug subagents til hver user story for at kunne arbejde parallelt hvis nødvendigt.
 
+## VIGTIGT: Filhåndtering
+
+Brug ALTID #tool:editFiles til at oprette og redigere filer. Brug ALDRIG terminalen til filoperationer. Mapper oprettes automatisk når du opretter en fil med editFiles.
+
 ## Input
 
 Du modtager en overordnet plan fra Planner agenten med:
@@ -35,11 +37,9 @@ Du modtager en overordnet plan fra Planner agenten med:
 
 ## Proces
 
-### 1. Opret feature mappe
+### 1. Opret feature mappe og prd.json
 
-```bash
-mkdir -p dev_docs/[feature-navn]
-```
+Brug #tool:editFiles til at oprette `dev_docs/[feature-navn]/prd.json` — mappen oprettes automatisk.
 
 ### 2. Identificér user stories
 
@@ -102,7 +102,7 @@ Hver user story SKAL have:
 
 ## Gem filen
 
-Gem som `dev_docs/[feature-navn]/prd.json`
+Brug #tool:editFiles til at gemme `dev_docs/[feature-navn]/prd.json`.
 
 ## Når prd.json er klar
 
