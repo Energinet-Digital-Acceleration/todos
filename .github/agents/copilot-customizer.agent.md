@@ -7,7 +7,7 @@ handoffs:
   - label: Opret filen
     agent: agent
     prompt: Opret nu filen baseret på planen ovenfor.
-    send: false
+    send: true
 ---
 
 # Copilot Customizer
