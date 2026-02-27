@@ -311,6 +311,53 @@ function formatDate(date: Date): string {
 }
 
 /**
+ * Format a due date timestamp as a relative Danish string for display.
+ * Centralizes all relative date display logic (I dag, I morgen, I går, etc.).
+ *
+ * @param timestamp - The due date as a Unix timestamp (ms)
+ * @returns Formatted string like "I dag", "I morgen", "3 dage siden", or "25. jan"
+ */
+export function formatRelativeDate(timestamp: number): string {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const dueDay = new Date(timestamp)
+  dueDay.setHours(0, 0, 0, 0)
+
+  const diffDays = Math.floor(
+    (dueDay.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+  )
+
+  if (diffDays === 0) return 'I dag'
+  if (diffDays === 1) return 'I morgen'
+  if (diffDays === 2) return 'I overmorgen'
+  if (diffDays === -1) return 'I går'
+  if (diffDays < -1) return `${Math.abs(diffDays)} dage siden`
+
+  const date = new Date(timestamp)
+  return date.toLocaleDateString('da-DK', { day: 'numeric', month: 'short' })
+}
+
+/**
+ * Check if a due date timestamp is overdue (before today).
+ */
+export function isDueDateOverdue(timestamp: number): boolean {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  return timestamp < today.getTime()
+}
+
+/**
+ * Check if a due date timestamp is today.
+ */
+export function isDueDateToday(timestamp: number): boolean {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const dueDay = new Date(timestamp)
+  dueDay.setHours(0, 0, 0, 0)
+  return today.getTime() === dueDay.getTime()
+}
+
+/**
  * Complete partial date text in input string.
  * Similar to completePriorityInText for priorities.
  * 

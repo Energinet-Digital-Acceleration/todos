@@ -1,26 +1,15 @@
 <script lang="ts">
   import type { DueDateMatch } from './dueDateUtils'
+  import { formatRelativeDate } from './dueDateUtils'
 
   let { currentMatch }: { currentMatch?: DueDateMatch } = $props()
 
-  // Get relative text if applicable
+  // Get relative text if applicable (e.g. "I dag", "I morgen", "I overmorgen")
   const relativeText = $derived.by(() => {
     if (!currentMatch) return undefined
-
-    const date = new Date(currentMatch.date)
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    const targetDay = new Date(currentMatch.date)
-    targetDay.setHours(0, 0, 0, 0)
-
-    const diffDays = Math.floor(
-      (targetDay.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
-    )
-
-    if (diffDays === 0) return 'I dag'
-    if (diffDays === 1) return 'I morgen'
-    if (diffDays === 2) return 'I overmorgen'
-
+    const label = formatRelativeDate(currentMatch.date)
+    // Only show relative text for near-future labels (not formatted dates like "25. jan")
+    if (['I dag', 'I morgen', 'I overmorgen'].includes(label)) return label
     return undefined
   })
 </script>

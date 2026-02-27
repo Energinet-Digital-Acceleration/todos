@@ -1,6 +1,7 @@
 <script lang="ts">
   import { fade } from 'svelte/transition'
   import { setDueDate } from '../stores/todos'
+  import { formatRelativeDate, isDueDateOverdue, isDueDateToday } from './dueDateUtils'
 
   // Props
   let { todoId, dueDate } = $props<{
@@ -11,44 +12,9 @@
   // Local state for date picker visibility
   let showPicker = $state(false)
 
-  // Format due date for display
-  const formattedDate = $derived.by(() => {
-    if (!dueDate) return null
-    const date = new Date(dueDate)
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    const dueDay = new Date(dueDate)
-    dueDay.setHours(0, 0, 0, 0)
-
-    const diffDays = Math.floor(
-      (dueDay.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
-    )
-
-    if (diffDays === 0) return 'I dag'
-    if (diffDays === 1) return 'I morgen'
-    if (diffDays === -1) return 'I går'
-    if (diffDays < -1) return `${Math.abs(diffDays)} dage siden`
-
-    return date.toLocaleDateString('da-DK', { day: 'numeric', month: 'short' })
-  })
-
-  // Check if date is overdue
-  const isOverdue = $derived.by(() => {
-    if (!dueDate) return false
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    return dueDate < today.getTime()
-  })
-
-  // Check if date is today
-  const isToday = $derived.by(() => {
-    if (!dueDate) return false
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    const dueDay = new Date(dueDate)
-    dueDay.setHours(0, 0, 0, 0)
-    return today.getTime() === dueDay.getTime()
-  })
+  const formattedDate = $derived(dueDate ? formatRelativeDate(dueDate) : null)
+  const isOverdue = $derived(dueDate ? isDueDateOverdue(dueDate) : false)
+  const isToday = $derived(dueDate ? isDueDateToday(dueDate) : false)
 
   // Format date for input field (YYYY-MM-DD)
   const inputValue = $derived.by(() => {
