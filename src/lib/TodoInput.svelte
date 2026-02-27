@@ -8,7 +8,7 @@
     parseDueDate,
   } from './dueDateUtils'
   import PriorityAutocomplete from './PriorityAutocomplete.svelte'
-  import { completePriorityInText, matchPriority } from './priorityUtils'
+  import { completePriorityInText, matchPriorityInText } from './priorityUtils'
 
   let value = $state('')
   let isFocused = $state(false)
@@ -17,15 +17,7 @@
   const showCounter = $derived(isFocused && value.length > 0)
 
   // Match priority from input
-  const currentPriorityMatch = $derived.by(() => {
-    const hashIndex = value.lastIndexOf('#')
-    if (hashIndex === -1) return undefined
-
-    const afterHash = value.slice(hashIndex + 1)
-    if (!afterHash) return undefined
-
-    return matchPriority(afterHash)
-  })
+  const currentPriorityMatch = $derived(matchPriorityInText(value))
 
   // Match due date from input
   const currentDateMatch = $derived.by(() => {

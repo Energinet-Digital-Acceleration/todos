@@ -12,7 +12,7 @@
   import { fireConfetti } from './confetti'
   import PriorityAutocomplete from './PriorityAutocomplete.svelte'
   import PriorityBadge from './PriorityBadge.svelte'
-  import { completePriorityInText, getPriorityDisplay, matchPriority, sortByPriority } from './priorityUtils'
+  import { completePriorityInText, getPriorityDisplay, matchPriorityInText, sortByPriority } from './priorityUtils'
   import TodoDueDate from './TodoDueDate.svelte'
 
   // Filter for active (non-completed) todos
@@ -33,17 +33,7 @@
   let editValue = $state('')
 
   // Match priority from edit input
-  const editMatch = $derived.by(() => {
-    if (!editingId) return undefined
-
-    const hashIndex = editValue.lastIndexOf('#')
-    if (hashIndex === -1) return undefined
-
-    const afterHash = editValue.slice(hashIndex + 1)
-    if (!afterHash) return undefined
-
-    return matchPriority(afterHash)
-  })
+  const editMatch = $derived(editingId ? matchPriorityInText(editValue) : undefined)
 
   function getPriorityRowBgClass(priority?: Priority): string {
     return getPriorityDisplay(priority)?.rowBgClass ?? ''

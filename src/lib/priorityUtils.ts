@@ -94,6 +94,20 @@ export function completePriorityInText(text: string, priority: Priority): string
 }
 
 /**
+ * Match a priority hash-tag in text (e.g. "#hø" → 'high').
+ * Used by autocomplete in both TodoInput and TodoList edit mode.
+ */
+export function matchPriorityInText(text: string): Priority | undefined {
+  const hashIndex = text.lastIndexOf('#')
+  if (hashIndex === -1) return undefined
+
+  const afterHash = text.slice(hashIndex + 1)
+  if (!afterHash) return undefined
+
+  return matchPriority(afterHash)
+}
+
+/**
  * Sort items by priority (high → medium → low → none), then by createdAt.
  */
 export function sortByPriority<T extends { priority?: Priority; createdAt: number }>(
