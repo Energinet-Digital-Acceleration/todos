@@ -1,24 +1,30 @@
 {
-  "version": 1,
-  "project": "Code Review Agent & Skill Forbedringer",
-  "overview": "Forbedring af code-review agent og skill med fokus på at fjerne duplikering, tilføje AI-specifikke patterns, projekt-specifik kontekst, og bedre workflow-instruktioner.",
+  "version": 2,
+  "project": "Code Review Agent & Skill Forbedringer + .github Quality Fixes",
+  "overview": "Forbedring af code-review agent og skill med fokus på at fjerne duplikering, tilføje AI-specifikke patterns, projekt-specifik kontekst, og bedre workflow-instruktioner. Derudover: kvalitetsfixes fundet ved review af hele .github mappen — syntax-fejl, model-inkonsistens, template-violations og Builder agent forbedringer.",
   "goals": [
     "Fjern duplikering mellem agent.md og SKILL.md for nemmere vedligeholdelse",
     "Gør agenten mere pålidelig ved eksplicit at instruere skill-fil-læsning",
     "Tilføj projekt-specifik kontekst (Svelte 5, Tailwind, Bun)",
     "Tilføj AI-specifikke anti-patterns og exit criteria",
-    "Forbedre workflow-instruktioner (diff-strategi, clean output, severity-eksempler)"
+    "Forbedre workflow-instruktioner (diff-strategi, clean output, severity-eksempler)",
+    "Fix syntax-fejl og inkonsistenser i .github filer fundet ved review",
+    "Builder agenten skal automatisk validere ændrede filer for compile/lint fejl"
   ],
   "nonGoals": [
     "Ændre den overordnede multi-pass arkitektur",
     "Tilføje nye workflows udover de eksisterende 5",
-    "Automatisere code review (CI/CD integration)"
+    "Automatisere code review (CI/CD integration)",
+    "Omskrive agents/skills fra bunden"
   ],
   "successMetrics": [
     "Agent-filen er under 40 linjer (ekskl. frontmatter) — ingen duplikering",
     "Alle 4 skill-filer har projekt-relevante eksempler",
     "AI-specifikke anti-patterns er dokumenteret",
-    "Hvert pass har klare exit criteria"
+    "Hvert pass har klare exit criteria",
+    "Ingen syntax-fejl i skill frontmatter",
+    "Model-navne er konsistente på tværs af alle Bob agents",
+    "Builder agenten kører getErrors efter hver fil-ændring"
   ],
   "openQuestions": [],
   "userStories": [
@@ -187,6 +193,107 @@
         "Step 2: hvis staged → review staged, hvis ikke → review unstaged",
         "Step 3: hvis bruger specificerer branch → 'git diff main..HEAD'",
         "Negativ case: workflowet siger IKKE bare 'Run git diff or git diff --staged' uden beslutningslogik"
+      ]
+    },
+    {
+      "id": "US-011",
+      "title": "Fix dobbelt code-fence i deep-modules SKILL.md",
+      "status": "done",
+      "startedAt": "2026-02-27T16:25:36Z",
+      "completedAt": "2026-02-27T16:25:36Z",
+      "updatedAt": "2026-02-27T16:25:36Z",
+      "dependsOn": [],
+      "description": "Som vedligeholder vil jeg have korrekt frontmatter i deep-modules SKILL.md, så VS Code parser filen korrekt.",
+      "acceptanceCriteria": [
+        "SKILL.md starter med én enkelt code-fence (```skill) efterfulgt af YAML frontmatter",
+        "Der er IKKE en ydre ````skill fence der wrapper den indre ```skill fence",
+        "Filen parser korrekt som en skill med name og description i VS Code",
+        "Negativ case: filen har IKKE dobbelt-wrappede fences"
+      ]
+    },
+    {
+      "id": "US-012",
+      "title": "Fix broken indentation i code-review SKILL.md Pass 3",
+      "status": "done",
+      "startedAt": "2026-02-27T16:25:36Z",
+      "completedAt": "2026-02-27T16:25:36Z",
+      "updatedAt": "2026-02-27T16:25:36Z",
+      "dependsOn": [],
+      "description": "Som AI-agent vil jeg have konsistent indentation i Pass 3 Security, så 'Complete when' kriterierne parses korrekt som en samlet liste.",
+      "acceptanceCriteria": [
+        "Pass 3 Security 'Complete when:' har 4 bullet points alle indenteret som children",
+        "Bullet 'Relevant security checklist items are checked' er indenteret under 'Complete when:' (ikke som sibling til pass-steps)",
+        "Bullet 'Security findings are severity-labeled with concrete mitigations' er indenteret under 'Complete when:'",
+        "Strukturen matcher Pass 1, 2, 4 og 5 hvor alle 'Complete when' items er konsistent indenteret",
+        "Negativ case: ingen 'Complete when' bullets står på samme niveau som pass-step bullets"
+      ]
+    },
+    {
+      "id": "US-013",
+      "title": "Fix model-navne inkonsistens i Bob agent pipeline",
+      "status": "done",
+      "startedAt": "2026-02-27T16:27:27Z",
+      "completedAt": "2026-02-27T16:27:27Z",
+      "updatedAt": "2026-02-27T16:27:27Z",
+      "dependsOn": [],
+      "description": "Som udvikler vil jeg have konsistente model-navne i frontmatter og workflow-diagram, så dokumentationen ikke modsiger sig selv.",
+      "acceptanceCriteria": [
+        "Alle 3 Bob agents har korrekte model-navne i YAML frontmatter",
+        "Workflow-diagrammet i 03-bob-builder.agent.md matcher de faktiske model-navne fra frontmatter",
+        "Planner og Analyst viser 'Claude Opus 4.6' i diagrammet (matcher deres frontmatter)",
+        "Builder viser det korrekte model-navn fra sin frontmatter i diagrammet",
+        "Negativ case: ingen agent har et model-navn i diagrammet der er forskelligt fra sit frontmatter"
+      ]
+    },
+    {
+      "id": "US-014",
+      "title": "Erstat any-typer i list-component template",
+      "status": "done",
+      "startedAt": "2026-02-27T16:27:27Z",
+      "completedAt": "2026-02-27T16:27:27Z",
+      "updatedAt": "2026-02-27T16:27:27Z",
+      "dependsOn": [],
+      "description": "Som udvikler vil jeg have at svelte-component templates følger projektets TypeScript-regler, så genereret kode ikke bruger any.",
+      "acceptanceCriteria": [
+        "list-component.svelte bruger IKKE `any` typen",
+        "Props bruger en eksplicit Item interface eller generisk type med kommentar",
+        "Item interfacet har mindst `id: string` (krævet af #each keyed block)",
+        "En kommentar forklarer at typen skal erstattes med den faktiske item-type",
+        "Negativ case: ingen `any` i filen"
+      ]
+    },
+    {
+      "id": "US-015",
+      "title": "Udvid TypeScript instructions med projektrelevante regler",
+      "status": "done",
+      "startedAt": "2026-02-27T16:27:27Z",
+      "completedAt": "2026-02-27T16:27:27Z",
+      "updatedAt": "2026-02-27T16:27:27Z",
+      "dependsOn": [],
+      "description": "Som udvikler vil jeg have mere dækkende TypeScript-instruktioner, så Copilot genererer kode der matcher projektets konventioner.",
+      "acceptanceCriteria": [
+        "typescript.instructions.md har mindst 5 sektioner (op fra nuværende 3)",
+        "Ny sektion: enum vs union types — anbefaler union types for dette projekt",
+        "Ny sektion: eksplicit statement om at I-prefix IKKE bruges i dette projekt",
+        "Eksisterende indhold er bevaret",
+        "Negativ case: filen er stadig under 40 linjer — koncis, ikke en bog"
+      ]
+    },
+    {
+      "id": "US-016",
+      "title": "Builder agent: tilføj getErrors validering efter fil-ændringer",
+      "status": "done",
+      "startedAt": "2026-02-27T16:27:27Z",
+      "completedAt": "2026-02-27T16:27:27Z",
+      "updatedAt": "2026-02-27T16:27:27Z",
+      "dependsOn": [],
+      "description": "Som bruger vil jeg have at Builder agenten automatisk tjekker for compile/lint fejl efter hver ændring, så ødelagt kode opdages og rettes med det samme.",
+      "acceptanceCriteria": [
+        "03-bob-builder.agent.md tools-listen inkluderer 'diagnostics/getErrors' (eller tilsvarende VS Code diagnostics tool)",
+        "Sektion '### 3. Implementér opgaven' har et nyt step: 'Kør getErrors på ændrede filer og ret eventuelle fejl'",
+        "Stepet er placeret EFTER implementering men FØR Playwright-verifikation",
+        "Sektion '## Vigtige regler' nævner at fejl skal rettes inden man fortsætter",
+        "Negativ case: Builder agenten går IKKE videre til næste opgave hvis der er urettede compile/lint fejl"
       ]
     }
   ]

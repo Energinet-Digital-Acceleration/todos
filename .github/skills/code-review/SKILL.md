@@ -56,7 +56,7 @@ Complete multi-pass review of files at a given path.
    - **Complete when:**
      - All external inputs are identified
      - Input-to-sink data flow is traced
-   - Relevant [security checklist](./checklists.md) items are checked
+     - Relevant [security checklist](./checklists.md) items are checked
      - Security findings are severity-labeled with concrete mitigations
 6. **Pass 4: Tests (priority: medium, depth: behavior-verification)**
    - Tests included in the change?

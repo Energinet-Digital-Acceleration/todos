@@ -7,6 +7,7 @@ tools:
     'agent/runSubagent',
     'search',
     'edit/editFiles',
+    'read/problems',
     'execute/runInTerminal',
     'execute/getTerminalOutput',
     'read',
@@ -40,8 +41,9 @@ For hver opgave:
 1. **Læs acceptance criteria grundigt**
 2. **Undersøg eksisterende kode** med #tool:search
 3. **Implementér løsningen**
-4. **Verificér altid visuelle ændringer med Playwright** (se sektion nedenfor)
-5. **Test at negative cases håndteres**
+4. **Kør getErrors på ændrede filer og ret eventuelle fejl**
+5. **Verificér altid visuelle ændringer med Playwright** (se sektion nedenfor)
+6. **Test at negative cases håndteres**
 
 ### 4. Verificér med Playwright
 
@@ -92,9 +94,11 @@ Når opgaven er verificeret visuelt, opdater prd.json:
 - **Én opgave ad gangen** - færdiggør før du går videre
 - **Verificér ALTID visuelt** - brug Playwright til at se at det virker
 - **Følg acceptance criteria præcist** - de er kontrakten
+- **Ret compile/lint fejl før du fortsætter** - kør getErrors på ændrede filer efter hver implementering
 - **Kør tests** hvis de er del af kriterierne
 - **Commit ikke** - lad brugeren reviewe først
 - **Ved fejl: fix og fortsæt** - spørg kun hvis du er helt blokeret
+- **Gå ikke videre til næste opgave med urettede fejl** - alle diagnostics skal være håndteret først
 
 ## Status rapport
 
@@ -121,7 +125,7 @@ Giv en samlet oversigt:
 ```
 ┌─────────────┐     ┌─────────────────┐     ┌──────────────┐
 │   Planner   │────▶│  Plan Detailer  │────▶│ Implementer  │
-│ (Opus 4.5)  │     │   (Opus 4.5)    │     │(Sonnet 4.5)  │
+│ (Claude Opus 4.6) ││ (Claude Opus 4.6) ││(GPT-5.3-Codex)│
 └─────────────┘     └─────────────────┘     └──────────────┘
       │                     │                      │
       ▼                     ▼                      ▼
