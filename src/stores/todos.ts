@@ -14,10 +14,10 @@ export interface Todo {
 }
 
 function createTodosStore() {
-  const { subscribe, update } = writable<Todo[]>(loadStorage().todos)
+  const { subscribe, update } = writable<Todo[]>(loadStorage().todos as unknown as Todo[])
 
   // Subscribe to changes and persist
-  subscribe((todos) => saveStorage({ todos }))
+  subscribe((todos) => saveStorage({ todos: todos as unknown[] }))
 
   return {
     subscribe,

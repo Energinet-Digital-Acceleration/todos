@@ -1,10 +1,13 @@
-import type { Todo } from './todos'
-
 const STORAGE_KEY = 'todos-storage'
 
+/**
+ * Shape of persisted app data. Uses unknown[] for todos
+ * to avoid circular dependency with the todos store.
+ * The todos store is responsible for casting to its own Todo type.
+ */
 export interface AppStorage {
   theme?: 'dark' | 'light'
-  todos: Todo[]
+  todos: unknown[]
 }
 
 const defaultStorage: AppStorage = {
