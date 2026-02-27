@@ -5,6 +5,7 @@
 **Hvornår:** Flere små, relaterede moduler der bidrager til samme feature/koncept.
 
 **Fremgangsmåde:**
+
 1. Skab ét nyt modul med en public interface-fil (f.eks. `index.ts`)
 2. Flyt relaterede moduler ind som private/interne implementeringsfiler
 3. Eksponér kun det minimale interface der er nødvendigt
@@ -12,6 +13,7 @@
 5. Opdatér alle importstier
 
 **Eksempel (TypeScript):**
+
 ```typescript
 // FØR: Mange shallow modules
 // auth/validateToken.ts → eksporterer validateToken()
@@ -34,12 +36,14 @@ export type { Session, Permission } from './internal/types'
 **Hvornår:** Kaldere skal tage mange beslutninger for at bruge et modul korrekt.
 
 **Fremgangsmåde:**
+
 1. Identificér konfiguration og beslutningslogik der gentages hos kaldere
 2. Flyt logikken ind i modulet med fornuftige defaults
 3. Gør det mest almindelige use case til et zero-config kald
 4. Tilbyd overrides via options-objekt
 
 **Eksempel:**
+
 ```typescript
 // FØR: Kalder håndterer kompleksitet
 const transport = new FileTransport('/var/log/app.log')
@@ -47,7 +51,7 @@ const formatter = new JsonFormatter({ timestamp: true, level: true })
 const logger = new Logger(transport, formatter, { minLevel: 'info' })
 
 // EFTER: Kompleksitet trukket ned
-const logger = createLogger()                                    // zero-config
+const logger = createLogger() // zero-config
 const logger = createLogger({ level: 'debug', output: 'custom.log' }) // overrides
 ```
 
@@ -56,12 +60,14 @@ const logger = createLogger({ level: 'debug', output: 'custom.log' }) // overrid
 **Hvornår:** Samme designbeslutning (dataformat, protokol) er spredt over flere moduler.
 
 **Fremgangsmåde:**
+
 1. Identificér den delte designbeslutning
 2. Skab ét modul der ejer denne beslutning
 3. Lad andre moduler interagere gennem det nye moduls interface
 4. Fjern duplikeret viden fra de andre moduler
 
 **Eksempel:**
+
 ```typescript
 // FØR: JSON API format spredt over 3 filer
 // api/users.ts:    const response = { data: users, meta: { total: count } }
@@ -81,6 +87,7 @@ export function paginated<T>(data: T[], total: number) {
 **Hvornår:** Flere specialiserede moduler har overlappende funktionalitet.
 
 **Fremgangsmåde:**
+
 1. Identificér den generelle funktionalitet bag specialiseringerne
 2. Skab et generelt modul med en simpel, bred interface
 3. Implementér specialiserede use cases oven på det generelle modul
@@ -88,6 +95,7 @@ export function paginated<T>(data: T[], total: number) {
 **Princip:** Et modul der kan bruges i mange kontekster har typisk et simplere interface end et der er skræddersyet til én kontekst.
 
 **Eksempel:**
+
 ```typescript
 // FØR: Specialiserede validatorer
 function validateEmail(value: string): boolean { ... }
@@ -108,6 +116,7 @@ const phoneRules: ValidationRule[] = [required(), pattern(PHONE_REGEX)]
 **Bemærk:** Dette mønster er mest relevant for mellemstore til store projekter. For små projekter eller libraries kan en flad struktur være mere passende.
 
 **Fremgangsmåde:**
+
 1. Identificér logiske features/domæner
 2. Skab en mappe per feature
 3. Flyt al relateret kode ind i feature-mappen

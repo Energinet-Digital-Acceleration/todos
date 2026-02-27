@@ -1,6 +1,6 @@
 # Ousterhouts 15 Designprincipper
 
-Fra *A Philosophy of Software Design* (2. udgave, 2021).
+Fra _A Philosophy of Software Design_ (2. udgave, 2021).
 
 ## De 15 principper
 
@@ -23,6 +23,7 @@ Fra *A Philosophy of Software Design* (2. udgave, 2021).
 ## Den visuelle metafor
 
 Tænk på moduler som rektangler:
+
 - **Bredde** = interfacets kompleksitet (antal exports, parametre, typer)
 - **Dybde** = implementeringens funktionalitet (intern logik, LOC)
 
@@ -38,6 +39,7 @@ Tænk på moduler som rektangler:
 ## Relevans for AI-agenter
 
 AI-agenter navigerer en kodebase som en ny medarbejder uden hukommelse:
+
 - Deep modules lader AI'en læse ét interface og forstå modulet
 - Shallow modules tvinger AI'en til at læse hundredvis af sammenkoblede filer
 - Progressive disclosure: interface = discovery-lag, implementering = execution-lag
