@@ -77,3 +77,14 @@ For Pass 1 when new modules are introduced:
 - [ ] Are there pass-through methods that just forward calls?
 - [ ] Does the change introduce information leakage?
 - [ ] Can the implementation change without affecting callers?
+
+---
+
+## Project-Specific Checklist (Svelte 5 + Bun)
+
+- [ ] Uses Svelte 5 runes patterns (`$state`, `$derived`, `$effect`) where relevant
+- [ ] Avoids Svelte 4 patterns where Svelte 5 runes should be used
+- [ ] UI text is in Danish, while code and comments are in English
+- [ ] Uses Tailwind CSS 4 utility classes and existing design primitives
+- [ ] Follows state flow: `storage.ts` → `todos.ts` → Components
+- [ ] Avoids direct `localStorage` access outside `src/stores/storage.ts`

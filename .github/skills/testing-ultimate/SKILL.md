@@ -1,10 +1,6 @@
 ---
 name: testing-ultimate
-description: >
-  Comprehensive testing skill for developing and maintaining high-quality tests.
-  Covers test analysis, smell detection, test strengthening, characterization tests,
-  TDD workflow, and Humble Object refactoring. Technology and language agnostic.
-  Use when writing, reviewing, improving, or refactoring tests in any project.
+description: Comprehensive testing skill for developing and maintaining high-quality tests across analysis, smell detection, strengthening, characterization tests, TDD workflow, and Humble Object refactoring.
 argument-hint: '[command] [path or context]'
 ---
 

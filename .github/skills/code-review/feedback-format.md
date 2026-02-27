@@ -57,6 +57,47 @@ Fix:
 Reference: OWASP A03:2021 – Injection
 ```
 
+## Examples for Each Severity
+
+### 🟠 Major
+
+```
+🟠 suggestion (blocking): Duplicate validation logic should be centralized
+
+File: src/lib/TodoInput.svelte, line 23
+Problem: Validation rules are duplicated in multiple components, increasing drift risk.
+
+Fix:
+  Extract validation into a shared helper in src/lib and reuse it.
+
+Reference: Google Standard — improve overall code health
+```
+
+### 🟡 Minor
+
+```
+🟡 nitpick (non-blocking): Nit: Prefer descriptive variable name
+
+File: src/stores/todos.ts, line 15
+Problem: Variable `t` reduces readability in a core state transformation.
+
+Fix:
+  Rename `t` to `todo` for clarity.
+
+Reference: Readability and maintainability best practice
+```
+
+### 🟢 Praise
+
+```
+🟢 praise: Clear separation of persistence from business logic
+
+File: src/stores/storage.ts, line 1
+Positive: localStorage access is isolated, keeping todo business logic cleaner and easier to test.
+
+Reference: Deep Modules — hide implementation details behind simple interfaces
+```
+
 ## Rules
 
 - Every review must contain at least one 🟢 praise

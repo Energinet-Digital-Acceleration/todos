@@ -31,3 +31,15 @@ From Microsoft (Greiler et al.) and cognitive science:
 - Overloaded reviewers leave _more_ comments but _fewer useful_ ones
 - **200 lines** is Google's soft limit — a third of Google's changes touch only one file
 - Small changes get careful reads; large changes get skimmed
+
+---
+
+## AI Reviewer Anti-Patterns
+
+| Anti-Pattern            | Problem                                                | Solution                                                         |
+| ----------------------- | ------------------------------------------------------ | ---------------------------------------------------------------- |
+| **Hallucinated bugs**   | Flags issues not present in the code                   | Read full file context and quote exact evidence before raising   |
+| **Generic boilerplate** | Gives vague feedback without actionable value          | Require file, line, concrete fix, and principle for each finding |
+| **Over-reviewing**      | Floods author with low-value comments                  | Prioritize top findings by severity and cap minor comments       |
+| **Framework ignorance** | Suggests patterns that conflict with project standards | Read project instructions and tech conventions before reviewing  |
+| **Context amnesia**     | Reviews changed lines without surrounding context      | Read nearby code, imports, and call sites before concluding      |

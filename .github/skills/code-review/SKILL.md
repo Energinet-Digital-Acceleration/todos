@@ -1,10 +1,6 @@
 ---
 name: code-review
-description: >
-  Multi-pass code review skill based on Google Engineering Practices, Microsoft research,
-  and OWASP security standards. Provides structured review workflows with Conventional
-  Comments output. Use when reviewing code, PRs, diffs, or analyzing code quality.
-  Technology and language agnostic.
+description: Multi-pass code review skill based on Google Engineering Practices, Microsoft research, and OWASP security standards with structured Conventional Comments workflows.
 argument-hint: '[command] [path or context]'
 ---
 
@@ -33,31 +29,53 @@ Complete multi-pass review of files at a given path.
 
 1. **Gather context** — read PR description, commit messages, identify changed files and scope
 2. **Assess risk** — new feature vs bugfix vs refactor; determine review depth
-3. **Pass 1: Architecture & Design (5 min focus)**
+3. **Pass 1: Architecture & Design (priority: medium, depth: structural)**
    - Does the overall design make sense?
    - Does it fit the system's existing architecture?
    - Are abstraction levels appropriate?
-   - Apply [deep modules checklist](./checklists.md#deep-modules-checklist) if new modules are introduced
+   - Apply [deep modules checklist](./checklists.md) if new modules are introduced
    - Check for over-engineering or under-engineering
-4. **Pass 2: Logic & Correctness (15-20 min focus)**
+   - **Complete when:**
+     - Module boundaries and responsibilities are mapped
+     - New abstractions are evaluated for necessity and fit
+     - Architecture-impacting risks are documented
+4. **Pass 2: Logic & Correctness (priority: high, depth: line-by-line)**
    - Does the code do what it claims?
    - Edge cases handled?
    - Error handling correct and consistent?
    - Race conditions / concurrency considered?
    - Data flow and control flow make sense?
-5. **Pass 3: Security (10 min focus)**
-   - Apply [security checklist](./checklists.md#security-checklist)
+   - **Complete when:**
+     - All modified functions/methods are checked for correctness
+     - Conditional branches and edge cases are considered
+     - Error paths are traced to handlers and outcomes
+     - Assumptions in control flow are explicitly validated
+5. **Pass 3: Security (priority: high, depth: data-flow)**
+   - Apply [security checklist](./checklists.md)
    - Input validation, injection, auth, secrets, error leakage
-6. **Pass 4: Tests (10 min focus)**
+   - **Complete when:**
+     - All external inputs are identified
+     - Input-to-sink data flow is traced
+   - Relevant [security checklist](./checklists.md) items are checked
+     - Security findings are severity-labeled with concrete mitigations
+6. **Pass 4: Tests (priority: medium, depth: behavior-verification)**
    - Tests included in the change?
    - Tests verify behavior, not implementation?
    - Will tests actually fail when code breaks?
    - Edge case coverage?
-7. **Pass 5: Style & Maintainability (5 min focus)**
+   - **Complete when:**
+     - Behavior-critical paths have test coverage
+     - At least one regression signal exists for each major finding
+     - Tests are assessed for false positives and brittleness
+7. **Pass 5: Style & Maintainability (priority: low, depth: scan)**
    - Naming clarity
    - Comment quality (why, not what)
    - Style guide adherence
    - Documentation updated?
+   - **Complete when:**
+     - Naming and comments are reviewed for clarity and intent
+     - Style and conventions are validated against project norms
+     - Documentation impact is assessed and noted
 8. **Compile output:**
    - Sort findings by severity (🔴 → 🟠 → 🟡 → 🟢)
    - Format as Conventional Comments (see [feedback-format.md](./feedback-format.md))
@@ -102,7 +120,7 @@ Focused security review based on OWASP Top 10 and OWASP Code Review Guide v2.
 
 1. Identify all external inputs (user input, API calls, file reads, env vars)
 2. Trace data flow from input to output
-3. Check each item in the [security checklist](./checklists.md#security-checklist)
+3. Check each item in the [security checklist](./checklists.md)
 4. For each finding:
    - Assign severity (🔴/🟠/🟡)
    - Reference OWASP category (e.g., A03:2021)
@@ -124,6 +142,15 @@ Fast review for small changes or time-sensitive situations.
 
 **Output:** Short report with critical/major issues and one positive observation.
 
+## Clean review output
+
+If no issues are found after all selected passes:
+
+1. Include at least **2-3 🟢 praise** findings tied to specific code decisions
+2. State the verdict as **LGTM**
+3. List which passes were completed (e.g., Pass 1-5)
+4. Keep the output informative; do not return only "LGTM"
+
 ---
 
 ### `/code-review diff`
@@ -132,11 +159,14 @@ Review the current git diff (staged or unstaged).
 
 **Steps:**
 
-1. Run `git diff` or `git diff --staged`
-2. For each changed file, read surrounding context (not just the diff)
-3. Run compressed Pass 1-5 per chunk
-4. Flag if a small change makes a large function worse → suggest splitting
-5. Consider: does this change improve or degrade overall code health?
+1. Check staged changes with `git diff --cached --stat`
+2. If staged changes exist, review staged diff with `git diff --cached`
+3. If no staged changes exist, review unstaged diff with `git diff`
+4. If user specifies a branch comparison, use `git diff main..HEAD`
+5. For each changed file, read surrounding context (not just the diff)
+6. Run compressed Pass 1-5 per chunk
+7. Flag if a small change makes a large function worse → suggest splitting
+8. Consider: does this change improve or degrade overall code health?
 
 ---
 
