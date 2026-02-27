@@ -7,7 +7,7 @@
     matchDueDate,
     parseDueDate,
   } from './dueDateUtils'
-  import PriorityAutocomplete from './PriorityAutocomplete.svelte'
+  import PriorityBadge from './PriorityBadge.svelte'
   import { completePriorityInText, matchPriorityInText } from './priorityUtils'
 
   let value = $state('')
@@ -76,6 +76,6 @@
   />
 
   <CharacterCounter count={value.length} visible={showCounter} />
-  <PriorityAutocomplete currentMatch={currentPriorityMatch} />
+  <PriorityBadge priority={currentPriorityMatch} hint="Tryk Enter for at tilføje" />
   <DueDateAutocomplete currentMatch={currentDateMatch} />
 </div>

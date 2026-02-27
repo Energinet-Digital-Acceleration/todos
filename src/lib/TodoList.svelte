@@ -10,7 +10,6 @@
     updateTodo,
   } from '../stores/todos'
   import { fireConfetti } from './confetti'
-  import PriorityAutocomplete from './PriorityAutocomplete.svelte'
   import PriorityBadge from './PriorityBadge.svelte'
   import { completePriorityInText, getPriorityDisplay, matchPriorityInText, sortByPriority } from './priorityUtils'
   import TodoDueDate from './TodoDueDate.svelte'
@@ -157,7 +156,7 @@
                      focus:outline-none focus:border-blue-500"
               autofocus
             />
-            <PriorityAutocomplete currentMatch={editMatch} />
+            <PriorityBadge priority={editMatch} hint="Tryk Enter for at tilføje" />
           </div>
         {:else}
           <div class="flex-1 flex items-center gap-2">
