@@ -12,29 +12,8 @@
   import { fireConfetti } from './confetti'
   import PriorityAutocomplete from './PriorityAutocomplete.svelte'
   import PriorityBadge from './PriorityBadge.svelte'
-  import { completePriorityInText, matchPriority } from './priorityUtils'
+  import { completePriorityInText, getPriorityDisplay, matchPriority, sortByPriority } from './priorityUtils'
   import TodoDueDate from './TodoDueDate.svelte'
-
-  const PRIORITY_ORDER: Record<Priority, number> = {
-    high: 0,
-    medium: 1,
-    low: 2,
-  }
-
-  function sortByPriority<T extends { priority?: Priority; createdAt: number }>(
-    todos: T[]
-  ): T[] {
-    return [...todos].sort((a, b) => {
-      const aPriority = a.priority ? PRIORITY_ORDER[a.priority] : 999
-      const bPriority = b.priority ? PRIORITY_ORDER[b.priority] : 999
-
-      if (aPriority !== bPriority) {
-        return aPriority - bPriority
-      }
-
-      return a.createdAt - b.createdAt
-    })
-  }
 
   // Filter for active (non-completed) todos
   const activeTodos = $derived(
@@ -66,19 +45,8 @@
     return matchPriority(afterHash)
   })
 
-  function getPriorityBgClass(priority?: string): string {
-    if (!priority) return ''
-
-    switch (priority) {
-      case 'high':
-        return 'bg-red-50/50 dark:bg-red-900/10'
-      case 'medium':
-        return 'bg-amber-50/50 dark:bg-amber-900/10'
-      case 'low':
-        return 'bg-green-50/50 dark:bg-green-900/10'
-      default:
-        return ''
-    }
+  function getPriorityRowBgClass(priority?: Priority): string {
+    return getPriorityDisplay(priority)?.rowBgClass ?? ''
   }
 
   function handleToggle(id: string, isCompleted: boolean, event?: MouseEvent) {
@@ -152,7 +120,7 @@
       <div
         class="group flex items-center gap-3 py-3 px-3 -mx-3
                rounded-xl
-               {getPriorityBgClass(todo.priority)}
+               {getPriorityRowBgClass(todo.priority)}
                hover:bg-stone-50 dark:hover:bg-neutral-700/50"
         in:fly={{ y: -20, duration: 300, easing: cubicOut }}
         out:fly={{ y: 20, duration: 300, easing: cubicOut }}
@@ -286,7 +254,7 @@
         <div
           class="group flex items-center gap-3 py-2.5 px-3 -mx-3
                  rounded-xl
-                 {getPriorityBgClass(todo.priority)}
+                 {getPriorityRowBgClass(todo.priority)}
                  hover:bg-stone-50 dark:hover:bg-neutral-700/50"
           in:fly={{ y: 20, duration: 300, easing: cubicOut }}
           out:fade={{ duration: 200 }}
