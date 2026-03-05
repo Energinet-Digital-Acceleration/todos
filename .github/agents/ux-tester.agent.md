@@ -1,7 +1,7 @@
 ---
 name: UX Tester
 description: Tester brugeroplevelsen i appen via Simple Browser — interagerer, verificerer og rapporterer fund
-model: Claude Opus 4.6 (copilot)
+model: Claude Sonnet 4.6 (copilot)
 tools:
   [
     'browser',
