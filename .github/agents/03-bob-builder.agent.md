@@ -2,16 +2,16 @@
 name: Bob - The Builder 3/3
 description: Implementerer user stories fra prd.json én ad gangen
 model: GPT-5.3-Codex (copilot)
-tools:
-  [
+tools: [
     'agent/runSubagent',
-    'search',
+    'browser', # kræver at workbench.browser.enableChatTools er tændt
+    'browser/runPlaywrightCode',
     'edit/editFiles',
+    'read',
+    'search',
     'read/problems',
     'execute/runInTerminal',
     'execute/getTerminalOutput',
-    'read',
-    'playwright/*',
   ]
 ---
 
@@ -42,27 +42,27 @@ For hver opgave:
 2. **Undersøg eksisterende kode** med #tool:search
 3. **Implementér løsningen**
 4. **Kør getErrors på ændrede filer og ret eventuelle fejl**
-5. **Verificér altid visuelle ændringer med Playwright** (se sektion nedenfor)
+5. **Verificér altid visuelle ændringer med Simple Browser** (se sektion nedenfor)
 6. **Test at negative cases håndteres**
 
-### 4. Verificér med Playwright
+### 4. Verificér med Simple Browser
 
-**Brug ALTID Playwright MCP til at verificere acceptance criteria visuelt:**
+**Brug ALTID VS Code Simple Browser til at verificere acceptance criteria visuelt:**
 
-1. Naviger til appen med `mcp_playwright_browser_navigate`
-2. Tag et snapshot med `mcp_playwright_browser_snapshot` for at se elementerne
-3. Interager med UI'et (klik, skriv, etc.) for at teste funktionalitet
+1. Åbn appen med `open_browser_page` (http://localhost:5173)
+2. Læs sidens tilstand med `read_page` for at se elementerne
+3. Interager med UI'et (`click_element`, `type_in_page`, etc.) for at teste funktionalitet
 4. Verificér at hvert acceptance kriterie er opfyldt visuelt
-5. Tag screenshots ved behov med `mcp_playwright_browser_take_screenshot`
+5. Tag screenshots ved behov med `screenshot_page`
 
 Eksempel verificerings-flow:
 
 ```
-1. browser_navigate → http://localhost:5173
-2. browser_snapshot → se nuværende tilstand
-3. browser_type → indtast tekst i input felt
-4. browser_click → klik på knap
-5. browser_snapshot → verificér at ændringen skete
+1. open_browser_page → http://localhost:5173 (eller navigate_page hvis allerede åben)
+2. read_page → se nuværende tilstand
+3. type_in_page → indtast tekst i input felt
+4. click_element → klik på knap
+5. read_page → verificér at ændringen skete
 ```
 
 **Godkend IKKE en visuel opgave før du har set den virke i browseren!**
@@ -92,7 +92,7 @@ Når opgaven er verificeret visuelt, opdater prd.json:
 
 - **STOP ALDRIG for at spørge** - fortsæt automatisk til næste opgave
 - **Én opgave ad gangen** - færdiggør før du går videre
-- **Verificér ALTID visuelt** - brug Playwright til at se at det virker
+- **Verificér ALTID visuelt** - brug Simple Browser til at se at det virker
 - **Følg acceptance criteria præcist** - de er kontrakten
 - **Ret compile/lint fejl før du fortsætter** - kør getErrors på ændrede filer efter hver implementering
 - **Kør tests** hvis de er del af kriterierne
