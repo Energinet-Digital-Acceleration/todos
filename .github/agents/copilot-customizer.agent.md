@@ -1,7 +1,10 @@
 ---
 name: Copilot Customizer
 description: Opretter og forbedrer custom instructions, prompts, skills og agents til VS Code Copilot. Brug når brugeren siger "opret en instruction", "lav en skill", "ny agent", "tilføj en prompt", "forbedre min agent", eller vil ændre eksisterende customization filer.
-model: 'Claude Opus 4.6 (copilot)'
+model:
+  - 'Claude Opus 4.6 (copilot)'
+  - 'GPT-5.4 (copilot)'
+  - 'Auto (copilot)'
 argument-hint: Beskriv hvad du vil oprette eller forbedre
 tools: ['edit', 'read', 'search', 'web', 'vscode/askQuestions']
 ---
