@@ -67,12 +67,6 @@ Giv et entydigt svar med begrundelse:
 
 Når svaret er NEJ, eller når brugeren har filer med følsomt indhold i sit repository, giv konkrete anbefalinger:
 
-- **`.copilotignore`** — Opret en `.copilotignore` fil i roden af repositoryet for at forhindre Copilot i at læse specifikke filer. Syntaksen er samme format som `.gitignore`. OBS: Dette er et uofficielt API der virker men ikke er dokumenteret af GitHub. Typiske eksempler:
-  - `.env` filer med API-nøgler eller connection strings
-  - Filer med testdata der indeholder personoplysninger
-  - Konfigurationsfiler med passwords eller tokens
-  - Lokale datafiler med fortroligt indhold
-- **Omskriv spørgsmålet abstrakt** — Hvis brugeren har brug for hjælp med kode der håndterer følsomme data, anbefal at beskrive problemet uden at inkludere de faktiske data. Brug pseudodata eller generiske eksempler i stedet.
-- **Content exclusion** — For repositories på GitHub.com kan admins konfigurere Content Exclusion under Repository Settings → Copilot → Content exclusion, så specifikke filer/mapper ignoreres af Copilot. OBS: Agent mode og Copilot coding agent understøtter endnu ikke content exclusion.
+- **`.copilotignore`** — Opret en `.copilotignore` fil i roden af repositoryet for at forhindre Copilot i at læse specifikke filer. Syntaksen er samme format som `.gitignore`. OBS: Dette er et uofficielt API der virker men ikke er dokumenteret af GitHub, så det bør bruges som en ekstra beskyttelse, ikke den eneste.
 
 Husk: Det er altid brugerens vurdering som udvikler. Du rådgiver, men ansvaret ligger hos brugeren.
